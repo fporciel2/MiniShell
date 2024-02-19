@@ -16,7 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Introduction
+## Introduction
 
 MiniShell is a product of objectification of labor. The shell, in its essence, is a mediator between the user and the complexity of the operating system, much like language is a mediator of reality. Indeed, it 
 involves the construction of a user interface *and* an object language: as an object language, it is the objectification of the formal system of human-operating system interaction; as a user interface, it is the 
@@ -44,3 +44,33 @@ mechanisms (locking, careful order of operations) are required to manage file de
 This analogy can be seen as reflective of the broader societal challenges of resource allocation, labor, and the means of production. The dining philosophers problem and the management of file descriptors in a 
 shell both highlight the importance of structured, fair systems for resource allocation to prevent deadlock (stagnation) and ensure productive harmony. This can be interpreted as a microcosm of societal labor 
 dynamics, where the means of production (resources) must be managed efficiently and fairly to prevent conflict and ensure the wellbeing of all participants.
+
+## Characteristics
+
+Minishell is a miniature shell program based on Bash. Minishell supports:
+
+* Prompt display
+* Command history (`up` and `down` arrows)
+* System executables available from the environment (`ls`, `cat`, `grep`, etc.)
+* Local executables (`./minishell`)
+* Builtin commands :
+    * `echo` (and option `-n`)
+    * `cd` (with only a relative or absolute path)
+    * `pwd` (no options)
+    * `export` (no options)
+    * `unset` (no options)
+    * `env` (no options or arguments)
+    * `exit` (with exit number but no other options)
+    * Pipes `|` which redirect output from one command to input for the next
+* Redirections:
+    * `>` redirects output
+    * `>>` redirects output in append mode
+    * `<` redirects input
+    * `<< DELIMITER` displays a new prompt, reads user input until reaching DELIMITER, redirects user input to command input (does not update history)
+* Environment variables (i.e. `$USER` or `$VAR`) that expand to their values.
+* `$?` expands to the exit status of the most recently executed foreground pipeline.
+* User keyboard signals:
+    * `ctrl-c` displays a new prompt line.
+    * `ctrl-d` exits minishell
+    * `ctrl-\` does nothing
+However, Minishell does not support `\`, `;`, `&&`, `||`, or wildcards.
