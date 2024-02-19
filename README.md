@@ -74,3 +74,5 @@ Minishell is a miniature shell program based on Bash. Minishell supports:
     * `ctrl-d` exits minishell
     * `ctrl-\` does nothing
 However, Minishell does not support `\`, `;`, `&&`, `||`, or wildcards.
+
+Please, note that this MiniShell has nothing to do with mini shotgun shells.
