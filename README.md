@@ -82,6 +82,5 @@ MiniShell's code is modular, with implementation order `lexer -> parser -> expan
 * **Redirection and Piping**: Managing input/output redirection (`>`, `<`, `>>`) and piping between commands (`|`).
 * **Signal Handling**: Dealing with signals like `SIGINT` and `SIGCHLD`.
 * **Environment**: Storing and modifying the shell's environment variables.
-order of implementation could be lexer -> parser -> expander -> executor to make your life easier
 
 Please, note that this MiniShell has nothing to do with mini shotgun shells.
