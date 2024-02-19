@@ -88,5 +88,5 @@ Please, note that this MiniShell has nothing to do with mini shotgun shells.
 ## General description (how MiniShell works)
 
 The lexer adopts the BDMAS (brackets first, then divide and multiply, then addition and subtraction respectively) rule, such as in mathematical formal languages. It uses recursion to connect the BDMAS rule against 
-logical operators and tokens and verify whether the user's input is a well formed formula: during this process, it translates directly translates the concrete syntax of the input into its abstract syntax expressed 
-in a lower-level language.
+logical operators and tokens and verify whether the user's input is a well formed formula: during this process, it translates directly translates the concrete syntax of the input into its abstract syntax through a 
+bracketed expression.
