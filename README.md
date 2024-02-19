@@ -84,3 +84,9 @@ MiniShell's code is modular, with implementation order `lexer -> parser -> expan
 * **Environment**: Storing and modifying the shell's environment variables.
 
 Please, note that this MiniShell has nothing to do with mini shotgun shells.
+
+## General description (how MiniShell works)
+
+The lexer adopts the BDMAS (brackets first, then divide and multiply, then addition and subtraction respectively) rule, such as in mathematical formal languages. It uses recursion to connect the BDMAS rule against 
+logical operators and tokens and verify whether the user's input is a well formed formula: during this process, it translates directly the theoretical execution tree into a single physical string written in a 
+low-level language, representing an abstract syntax tree.
