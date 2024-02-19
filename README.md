@@ -73,6 +73,15 @@ Minishell is a miniature shell program based on Bash. Minishell supports:
     * `ctrl-c` displays a new prompt line.
     * `ctrl-d` exits minishell
     * `ctrl-\` does nothing
-However, Minishell does not support `\`, `;`, `&&`, `||`, or wildcards.
+
+MiniShell's code is modular, with implementation order `lexer -> parser -> expander -> executor`. The modular components are:
+
+* **Parsing**: Handling user input and breaking it down into commands and arguments.
+* **Execution**: Running the parsed commands using system calls like `fork()`, `exec()`, and `waitpid()`.
+* **Built-ins**: Implementing shell built-in commands like `cd`, `echo`, `setenv`, `unsetenv`, `env`, and `exit`.
+* **Redirection and Piping**: Managing input/output redirection (`>`, `<`, `>>`) and piping between commands (`|`).
+* **Signal Handling**: Dealing with signals like `SIGINT` and `SIGCHLD`.
+* **Environment**: Storing and modifying the shell's environment variables.
+order of implementation could be lexer -> parser -> expander -> executor to make your life easier
 
 Please, note that this MiniShell has nothing to do with mini shotgun shells.
