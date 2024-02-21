@@ -127,4 +127,5 @@ execution of the processes or threads. This is similar to the dining philosopher
 philosophers problem is a classic synchronization problem that involves philosophers sitting around a table with a chopstick between each pair. A philosopher needs both chopsticks to eat. The challenge is to 
 design a protocol that allows all philosophers to eat without ever getting into a deadlock situation, where each philosopher is holding one chopstick and waiting for the other, thus preventing anyone from eating.
 The main challenge in both scenarios is preventing deadlocks while allowing concurrent access to shared resources. In the case of file descriptors, mechanisms like locking (using `flock` or similar tools) can be 
-employed to ensure that only one process can write to a file at a time, similar to how semaphores or mutexes are used in the dining philosophers problem to manage access to chopsticks.
+employed to ensure that only one process can write to a file at a time, similar to how semaphores or mutexes are used in the dining philosophers problem to manage access to chopsticks. Careful design is needed to 
+prevent starvation, where a process or thread is perpetually denied access to the resources it needs.
