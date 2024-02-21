@@ -103,3 +103,7 @@ The lexer separates input into tokens by reading characters from the standard in
 and checks if they follow the syntax described by the grammar rules through **semantic actions**.
 The executor starts by creating a new process for each command in the **pipeline** and making the parent wait for the last command. The parent process does all the piping and redirection before forking the 
 processes, so that the children inherits the redirection. The parent saves input/output and restores it in the end.
+
+Firstly, the execution of a shell script involves the invocation of the interpreter, which then proceeds to parse the given commands. These commands may either reside within the shell itself or exist as external 
+programs. The latter necessitate the spawning of new processes, thus expanding the scope of the original process tree. File descriptors serve as abstract representations of open files or other communication 
+channels, enabling the reading and writing of data. In the case of a shell, these descriptors facilitate the exchange of information between the user and the system.
