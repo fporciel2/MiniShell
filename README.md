@@ -129,6 +129,12 @@ design a protocol that allows all philosophers to eat without ever getting into 
 The main challenge in both scenarios is preventing deadlocks while allowing concurrent access to shared resources. In the case of file descriptors, mechanisms like locking (using `flock` or similar tools) can be 
 employed to ensure that only one process can write to a file at a time, similar to how semaphores or mutexes are used in the dining philosophers problem to manage access to chopsticks. Careful design is needed to 
 prevent starvation, where a process or thread is perpetually denied access to the resources it needs.
+Shells that work with file descriptors are related to synchronization problems like the dining philosophers problem because both scenarios involve resource management and concurrent access to shared resources. In 
+the case of shells working with file descriptors, file descriptors represent a way to interact with files, pipes, sockets, or other resources. When a shell spawns multiple processes or handles input/output 
+redirection, it needs to manage these file descriptors to ensure proper communication and data flow between processes. This can introduce synchronization concerns, such as avoiding race conditions, handling data 
+consistency, and managing access to shared resources. Similarly, the dining philosophers problem is a classic synchronization problem that illustrates the challenges of resource allocation and concurrent access. 
+In this problem, a group of philosophers sits at a table, with each philosopher needing two forks to eat. The challenge is to design a protocol that prevents deadlock and ensures fair access to forks by all 
+philosophers.
 
 ## Summary
 
