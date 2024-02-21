@@ -107,3 +107,15 @@ processes, so that the children inherits the redirection. The parent saves input
 Firstly, the execution of a shell script involves the invocation of the interpreter, which then proceeds to parse the given commands. These commands may either reside within the shell itself or exist as external 
 programs. The latter necessitate the spawning of new processes, thus expanding the scope of the original process tree. File descriptors serve as abstract representations of open files or other communication 
 channels, enabling the reading and writing of data. In the case of a shell, these descriptors facilitate the exchange of information between the user and the system.
+
+## Synchronization
+
+Both shells and the dining philosophers problem deal with synchronization, but they tackle different aspects of it.
+Shells interact with file descriptors for tasks like reading from and writing to files, pipes, and network sockets. While each file descriptor represents a resource, access to that resource may need to be 
+controlled to avoid conflicts. However, this isn't directly related to the specific problem of synchronization between multiple processes.
+The dining philosophers problem focuses on synchronizing access to shared resources between multiple processes. In the classic scenario, five philosophers share five forks, and each needs two forks to eat. The 
+challenge is to design a protocol that ensures no philosopher starves while preventing two neighbors from grabbing both forks simultaneously, leading to deadlock.
+Shells manage individual file descriptors for different processes. Potential conflicts in shells include concurrent read/write access to the same file or improper closing of descriptors leading to resource leaks: 
+solutions involve proper use of locking mechanisms, non-blocking I/O, and resource cleanup.
+The dining philosophers problem deals with synchronizing access to a fixed number of shared resources (forks) between multiple processes and focuses on preventing deadlock and ensuring fair access: solutions 
+involve using semaphores, monitors, or other synchronization primitives.
