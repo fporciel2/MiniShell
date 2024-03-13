@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/13 14:04:38 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/13 14:11:12 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -84,6 +84,21 @@
  * 	 	'signal()' or 'sigaction()' are used to set up signal handlers within
  * 	 	MiniShell. Common signals include SIGINT (Ctrl+c), SIGQUIT (Ctrl-$$) and
  * 	 	SIGTSTP (Ctrl+Z).
+ *
+ * 2- Design Elements.
+ *
+ * * Main Loop.
+ * 	Continuously displays a prompt, accepts input, and executes commands until 
+ * 	an exit command or signal is received.
+ *
+ * * Command Execution.
+ * 	After parsing, determines if a command is a built-in function of minishell
+ * 	or an external program. Handles built-ins directly and uses 'fork()' and
+ * 	'execve()' for external commands.
+ *
+ * * Redirection and Pipes.
+ * 	Implements functionality to redirect input and output. Uses pipes to connect
+ * 	the output of one command to the input of another.
  */
 
 #ifndef MINISHELL_H
