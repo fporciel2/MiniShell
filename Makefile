@@ -6,7 +6,7 @@
 #    By: fporciel <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/12 11:38:22 by fporciel          #+#    #+#              #
-#    Updated: 2024/03/13 11:17:43 by fporciel         ###   ########.fr        #
+#    Updated: 2024/03/13 11:18:31 by fporciel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 # MiniShell is a simple shell for Debian GNU/Linux.
@@ -103,7 +103,7 @@ memcheck: re
 	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
 		--verbose ./$(NAME)
 
-thread: re
+helgrind: re
 	@valgrind --tool=helgrind ./$(NAME)
 
 autogit: destroy
