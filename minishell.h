@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/13 14:11:12 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/13 14:37:41 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -30,75 +30,66 @@
  * please see:
  * https://github.com/fporciel2/MiniShell
  *
- * GENERAL STRUCTURE OF THE PROGRAM
+ * The MiniShell program is a simplified version of a Unix shell, like bash,
+ * which is a command-line interpreter that provides a user interface for the
+ * Unix operating system. The purpose of the MiniShell program is to serve as an
+ * educational project for students at School 42, where they can learn about and
+ * implement core functionalities of a shell. This includes understanding how a
+ * shell interprets and executes commands, manages processes, handles file
+ * descriptors, and interacts with the environment.
  *
- * 1 - Some concepts.
+ * The general structure of the MiniShell program involves several key
+ * components that work together to process and execute user commands:
  *
- * * Processes.
- * 	A process in computing is an instance of a computer program that is being
- * 	executed. It contains the program code and its current activity. Each
- * 	process has a unique process identifier (PID), and the operating system
- * 	manages multiple processes through process scheduling.
+ * 1 - COMMAND LINE INTERFACE (CLI). This is where the user inputs commands. The
+ * MiniShell program needs to provide a prompt and handle input, including
+ * maintaining a history of executed commands.
  *
- * 	* Creation and Terminantion.
- * 		Processes are created through system calls such as 'fork()' in Unix-like
- * 		operating systems. The 'fork()' system call creates a new process by
- * 		duplicating the current process. The new process is called the child
- * 		process, and the original process is the parent. Processes are
- * 		terminated by calling 'exit()', and a parent process can wait for a
- * 		child process to terminate using 'wait()' or 'waitpid()'.
- * 	* Execution.
- * 		To execute a new program with a process, the 'execve()' system call is
- * 		used. It replaces the current process's memory space with a new program.
+ * 2 - COMMAND PARSING. The input from the CLI must be parsed to separate the
+ * command and its arguments, handle quoting, and identify any special
+ * characters or operators.
  *
- * * File Descriptors.
- * 	File descriptors are abstract indicators used to access files or other
- * 	input/output resources, such as pipes and sockets. The standard file
- * 	descriptors are 0 (standard input, 'stdin'), 1 (standard output, 'stdout'),
- * 	and 2 (standard error, 'stderr').
+ * 3 - BUILT-IN COMMANDS. MiniShell should implement several built-in commands
+ * like 'echo', 'cd', 'pwd', 'export', 'unset', 'env', and 'exit'.
  *
- * 	 * Manipulation.
- * 	 	Functions like 'open(), 'read()', 'write()', and 'close()' are used to
- * 	 	manipulate file descriptors. Redirection in a shell is achieved by
- * 	 	duplicating file descriptors using 'dup()' or 'sup2()'.
+ * 4 - EXECUTION. After parsing, the shell must search for the appropriate
+ * executable based on the command, which could involve looking in the 'PATH'
+ * environment variable or using a specified path.
  *
- * * Memory Management.
- * 	Memory management involves allocating and deallocating memory as needed by a
- * 	program. Dynamic memory allocation in C is handled through 'malloc()',
- * 	'calloc()', 'realloc()', and 'free()'.
+ * 5 - REDIRECTION AND PIPES. The shell should be able to redirect input and
+ * output using '<', '>', ´<<´ and ´>>´, as well as handle pipes (´|´) to pass
+ * the output of one command as input to another.
  *
- * * Command Parsing.
- * 	Parsing involves breaking down the command input by the user into a format
- * 	that can be easily executed by the shell.
- * 	 
- * 	 * Techniques.
- * 	 	A tokenizer splits the input into tokens, which are then organized into
- * 	 	a syntax tree or a similar structure. Quotations and escapes are handled
- * 	 	in this phase.
+ * 6 - ENVIRONMENT VARIABLES. MiniShell must manage environment variables,
+ * allowing for expansion and modification.
  *
- * *Signal Handling.
- * 	Signals are a form of inter-process communication. They are used to notify a
- * 	process of events like interrupts.
- * 	 
- * 	 *Implementation.
- * 	 	'signal()' or 'sigaction()' are used to set up signal handlers within
- * 	 	MiniShell. Common signals include SIGINT (Ctrl+c), SIGQUIT (Ctrl-$$) and
- * 	 	SIGTSTP (Ctrl+Z).
+ * 7 - SIGNAL HANDLING. The program should handle errors gracefully, including
+ * command not found, permission denied, and other common error conditions.
  *
- * 2- Design Elements.
+ * 9 - MEMORY MANAGEMENT. All dynamically allocated memory must be properly
+ * managed to avoid memory leaks.
  *
- * * Main Loop.
- * 	Continuously displays a prompt, accepts input, and executes commands until 
- * 	an exit command or signal is received.
+ * The relations between these different parts are:
  *
- * * Command Execution.
- * 	After parsing, determines if a command is a built-in function of minishell
- * 	or an external program. Handles built-ins directly and uses 'fork()' and
- * 	'execve()' for external commands.
+ * * The CLI feeds user input to the COMMAND PARSING component.
+ * * COMMAND PARSING interprets the input and prepares it for EXECUTION.
+ * * BUILT-IN COMMANDS are executed internally without searching for external
+ * executables.
+ * * EXECUTION may involve creating new processes, which requires correct SIGNAL
+ * HANDLING and ENVIRONMENT VARIABLE management.
+ * * REDIRECTION AND PIPES after how the shell handles standard input, output,
+ * and error streams during command execution.
+ * * Throughout the process, MEMORY MANAGEMENT ensures that resources are
+ * allocated and freed appropriately.
  *
- * * Redirection and Pipes.
- * 	Implements functionality to redirect input and output. Uses pipes to connect
- * 	the output of one command to the input of another.
+ * The design of the MiniShell program should follow the guidelines and
+ * restrictions of the Norm coding standard, which includes rules on naming
+ * conventions, file structure, allowed functions, and more. The project's
+ * Makefile must compile the source files with the flags ´-Wall´, ´-Wextra´ and
+ * ´-Werror´.
+ * For the bonus part of the project, students can implement logical operators
+ * (´&&´ and ´||´) and wildcard expansion (´*´), but this is only evaluated if
+ * the mandatory part is perfectly completed.
  */
 
 #ifndef MINISHELL_H
