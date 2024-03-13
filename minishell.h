@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/13 12:28:21 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/13 14:04:38 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -29,6 +29,61 @@
  * For more information on how to contact me by electronic and paper mail
  * please see:
  * https://github.com/fporciel2/MiniShell
+ *
+ * GENERAL STRUCTURE OF THE PROGRAM
+ *
+ * 1 - Some concepts.
+ *
+ * * Processes.
+ * 	A process in computing is an instance of a computer program that is being
+ * 	executed. It contains the program code and its current activity. Each
+ * 	process has a unique process identifier (PID), and the operating system
+ * 	manages multiple processes through process scheduling.
+ *
+ * 	* Creation and Terminantion.
+ * 		Processes are created through system calls such as 'fork()' in Unix-like
+ * 		operating systems. The 'fork()' system call creates a new process by
+ * 		duplicating the current process. The new process is called the child
+ * 		process, and the original process is the parent. Processes are
+ * 		terminated by calling 'exit()', and a parent process can wait for a
+ * 		child process to terminate using 'wait()' or 'waitpid()'.
+ * 	* Execution.
+ * 		To execute a new program with a process, the 'execve()' system call is
+ * 		used. It replaces the current process's memory space with a new program.
+ *
+ * * File Descriptors.
+ * 	File descriptors are abstract indicators used to access files or other
+ * 	input/output resources, such as pipes and sockets. The standard file
+ * 	descriptors are 0 (standard input, 'stdin'), 1 (standard output, 'stdout'),
+ * 	and 2 (standard error, 'stderr').
+ *
+ * 	 * Manipulation.
+ * 	 	Functions like 'open(), 'read()', 'write()', and 'close()' are used to
+ * 	 	manipulate file descriptors. Redirection in a shell is achieved by
+ * 	 	duplicating file descriptors using 'dup()' or 'sup2()'.
+ *
+ * * Memory Management.
+ * 	Memory management involves allocating and deallocating memory as needed by a
+ * 	program. Dynamic memory allocation in C is handled through 'malloc()',
+ * 	'calloc()', 'realloc()', and 'free()'.
+ *
+ * * Command Parsing.
+ * 	Parsing involves breaking down the command input by the user into a format
+ * 	that can be easily executed by the shell.
+ * 	 
+ * 	 * Techniques.
+ * 	 	A tokenizer splits the input into tokens, which are then organized into
+ * 	 	a syntax tree or a similar structure. Quotations and escapes are handled
+ * 	 	in this phase.
+ *
+ * *Signal Handling.
+ * 	Signals are a form of inter-process communication. They are used to notify a
+ * 	process of events like interrupts.
+ * 	 
+ * 	 *Implementation.
+ * 	 	'signal()' or 'sigaction()' are used to set up signal handlers within
+ * 	 	MiniShell. Common signals include SIGINT (Ctrl+c), SIGQUIT (Ctrl-$$) and
+ * 	 	SIGTSTP (Ctrl+Z).
  */
 
 #ifndef MINISHELL_H
