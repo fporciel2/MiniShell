@@ -6,7 +6,7 @@
 #    By: fporciel <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/12 11:38:22 by fporciel          #+#    #+#              #
-#    Updated: 2024/03/12 13:34:08 by fporciel         ###   ########.fr        #
+#    Updated: 2024/03/13 11:17:43 by fporciel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 # MiniShell is a simple shell for Debian GNU/Linux.
@@ -31,13 +31,13 @@
 #
 
 .PHONY: all clean fclean re mem memcheck helgrind thread remem rethread \
-	autogit dlibft libft dprintf printf
+	autogit destroy
 .DEFAULT_GOAL: all
 NAME := minishell
 FTURL := https://github.com/fporciel2/1_libft.git
 DIR := $(shell pwd)
 DFT := $(DIR)/$(shell basename -s .git $(FTURL))
-HEADER := $(NAME).h
+HEADER := $(wildcard $(NAME)*.h) $(wildcard $(DFT)/*.h)
 MAIN := $(NAME).c
 SRCS := $(filter-out $(NAME), $(wildcard $(NAME)*.c))
 OBJS := $(patsubst %.c, %.o, $(SRCS))
@@ -52,10 +52,69 @@ COPT := -O3 -march=native -g
 INCLUDE := $(addprefix -I, $(DIR) $(DFT))
 LDINCLUDE := $(addprefix -L, $(DFT))
 LDFLAGS := -lc -lft -lreadline -lncurses -ltinfo
-LAFLAGS := -lasan $(LDFLAGS)
-LTFLAGS := -ltsan $(LDFLAGS)
+LAFLAGS := $(LDFLAGS) -lasan
+LTFLAGS := $(LDFLAGS) -ltsan
 
 all: $(NAME)
 
 $(NAME): $(MAIN) $(LIBFT) $(LIBMS)
-	@$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(MAIN) $(
+	@$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(MAIN) $(LIBMS) \
+		$(LIBFT) $(LDINCLUDE) $(LDFLAGS) -o $@
+
+$(LIBFT): $(DFT)
+	@if [ ! -e $@ ]; then $(MAKE) -C $(DFT) bonus; fi
+
+$(DFT):
+	@if [ ! -e $@ ]; then git clone $(FTURL); fi
+
+$(LIBMS): $(OBJS)
+	@ar rcs $@ $(OBJS) $(HEADER)
+
+$(OBJS): $(SRCS) $(HEADER)
+	@$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(SRCS) -c
+
+mem: $(MAIN) $(SRCS) $(HEADER) $(LIBFT)
+	@$(CC) $(CSTD) $(CFLAGS) $(AFLAGS) $(INCLUDE) $(HEADER) $(MAIN) $(SRCS) \
+		$(LIBFT) $(LAFLAGS) -o $(NAME)
+
+thread: $(MAIN) $(SRCS) $(HEADER) $(LIBFT)
+	@$(CC) $(CSTD) $(CFLAGS) $(TFLAGS) $(INCLUDE) $(HEADER) $(MAIN) $(SRCS) \
+		$(LIBFT) $(LTFLAGS) -o $(NAME)
+
+clean:
+	@rm -f $(OBJS)
+	@rm -f $(LIBMS)
+	@rm -f $(NAME).h.gch
+	@if [ -e $(DFT) ]; then $(MAKE) -C $(DFT) clean; fi
+
+fclean: clean
+	@rm -f $(NAME)
+
+re: fclean all
+
+remem: fclean mem
+
+rethread: fclean thread
+
+destroy: fclean
+	@rm -rfd $(DFT)
+
+memcheck: re
+	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+		--verbose ./$(NAME)
+
+thread: re
+	@valgrind --tool=helgrind ./$(NAME)
+
+autogit: destroy
+	@git status
+	@echo "\nIs there anything to remove? [y/n]"
+	@read answer; if [ $$answer = "y" ]; \
+		then git rm $$(git ls-files --deleted); fi
+	@git status
+	@git add *
+	@git status
+	@git commit -m "$(shell date)"
+	@git status
+	@git push
+
