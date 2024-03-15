@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_cleanup.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/13 16:14:31 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/15 12:01:04 by fporciel         ###   ########.fr       */
+/*   Created: 2024/03/15 11:31:59 by fporciel          #+#    #+#             */
+/*   Updated: 2024/03/15 11:35:33 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,20 +32,7 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+void	msh_cleanup(t_input *init)
 {
-	t_input	*init;
-
-	if (!envp)
-	{
-		if (write(1, "WARING: no env vars passed to MiniShell!!\n", 42) != 42)
-			return (perror(strerror(errno)), errno);
-	}
-	init = (t_input *)malloc(sizeof(t_input));
-	if (!init)
-		return (perror(strerror(errno)), errno);
-	msh_init(envp, init);
-	msh_loop();
-	msh_cleanup(init);
-	return (EXIT_SUCCESS);
+	free(init);
 }

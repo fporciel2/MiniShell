@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/15 11:12:48 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/15 12:27:39 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -116,12 +116,17 @@
 # include <curses.h>
 # include <term.h>
 
+static const volatile sig_atomic_t	last_signal;
+
 typedef struct s_input
 {
 	char	**envp;
 	char	***pipeline;
 }			t_input;
 
-void	msh_init(char	**envp);
+/* Initialization functions. */
+void	msh_init(char	**envp, t_input *init);
+/* Cleaning functions. */
+void	msh_cleanup(t_input *init);
 
 #endif
