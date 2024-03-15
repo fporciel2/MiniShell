@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/15 13:15:24 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/15 13:41:16 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -130,5 +130,6 @@ void	msh_handle_sigint(int sig);
 void	msh_handle_igquit(int sig);
 /* Cleaning functions. */
 void	msh_cleanup(t_input *init);
+void	msh_close_on_error(void);
 
 #endif

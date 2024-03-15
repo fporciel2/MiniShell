@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 12:29:22 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/15 13:27:09 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/15 13:39:20 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,14 +32,17 @@
 
 #include "minishell.h"
 
+void	msh_close_on_error(void)
+{
+	perror(strerror(errno));
+	exit(EXIT_FAILURE);
+}
+
 void	msh_handle_sigint(int sig)
 {
 	(void)sig;
 	if (write(STDOUT_FILENO, "\nminishell> ", 12) < 0)
-	{
-		perror(strerror(errno));
-		exit(EXIT_FAILURE);
-	}
+		msh_close_on_error();
 }
 
 void	msh_handle_sigquit(int sig)
@@ -54,11 +57,15 @@ void	msh_init(char **envp, t_input *init)
 	
 	init->envp = envp;
 	sa_int.sa_handler = msh_handle_sigint;
-	sigemptyset(&sa_int.sa_mask);
+	if (sigemptyset(&sa_int.sa_mask) < 0)
+		msh_close_on_error();
 	sa_int.sa_flags = 0;
-	sigaction(SIGINT, &sa_int, NULL);
+	if (sigaction(SIGINT, &sa_int, NULL) < 0)
+		msh_close_on_error();
 	sa_quit.sa_handler = msh_handle_sigquit;
-	sigemptyset(&sa_quit.sa_mask);
+	if (sigemptyset(&sa_quit.sa_mask) < 0)
+		msh_close_on_error();
 	sa_quit.sa_flags = 0;
-	sigaction(SIGQUIT, &sa_quit, NULL);
+	if (sigaction(SIGQUIT, &sa_quit, NULL) < 0)
+		msh_close_on_error();
 }
