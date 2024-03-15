@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/15 12:27:39 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/15 12:45:11 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -116,7 +116,7 @@
 # include <curses.h>
 # include <term.h>
 
-static const volatile sig_atomic_t	last_signal;
+static const volatile sig_atomic_t	g_last_signal;
 
 typedef struct s_input
 {
