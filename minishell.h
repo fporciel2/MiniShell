@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/15 13:41:16 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/15 15:26:42 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -121,6 +121,7 @@ static const volatile sig_atomic_t	g_last_signal;
 typedef struct s_input
 {
 	char	**envp;
+	char	*string;
 	char	***pipeline;
 }			t_input;
 
@@ -128,6 +129,11 @@ typedef struct s_input
 void	msh_init(char	**envp, t_input *init);
 void	msh_handle_sigint(int sig);
 void	msh_handle_igquit(int sig);
+/* Main loop's functions. */
+void	msh_loop(t_input *init);
+/* Tokenizer/Lexicon-analyzer's functions.*/
+void	msh_strtok(t_input *init);
+void	msh_clean_pipeline(init);
 /* Cleaning functions. */
 void	msh_cleanup(t_input *init);
 void	msh_close_on_error(void);

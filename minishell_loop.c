@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_init.c                                   :+:      :+:    :+:   */
+/*   minishell_loop.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/15 12:29:22 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/15 14:35:33 by fporciel         ###   ########.fr       */
+/*   Created: 2024/03/15 14:48:11 by fporciel          #+#    #+#             */
+/*   Updated: 2024/03/15 15:27:16 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,43 +32,46 @@
 
 #include "minishell.h"
 
-void	msh_close_on_error(void)
+static void	msh_clean_em_all(t_input *init)
 {
-	perror(strerror(errno));
-	exit(EXIT_FAILURE);
+	if (init->string)
+		free(init->string);
+	if (init->pipeline)
+		msh_clean_pipeline(init);
+	init->string = NULL;
+	init->pipeline = NULL;
 }
 
-void	msh_handle_sigint(int sig)
+static void	msh_no_readline(t_input *init)
 {
-	g_last_signal = sig;
-	if (write(STDOUT_FILENO, "\nminishell> ", 12) < 0)
+	msh_clean_em_all(init);
+	msh_cleaunp(init);
+	rl_clear_history();
+	if (write(1, "\n", 1) < 0)
 		msh_close_on_error();
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
+	exit(EXIT_SUCCESS);
 }
 
-void	msh_handle_sigquit(int sig)
+void	msh_loop(t_input *init)
 {
-	g_last_signal = sig;
-}
-
-void	msh_init(char **envp, t_input *init)
-{
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-	
-	init->envp = envp;
-	sa_int.sa_handler = msh_handle_sigint;
-	if (sigemptyset(&sa_int.sa_mask) < 0)
-		msh_close_on_error();
-	sa_int.sa_flags = 0;
-	if (sigaction(SIGINT, &sa_int, NULL) < 0)
-		msh_close_on_error();
-	sa_quit.sa_handler = msh_handle_sigquit;
-	if (sigemptyset(&sa_quit.sa_mask) < 0)
-		msh_close_on_error();
-	sa_quit.sa_flags = 0;
-	if (sigaction(SIGQUIT, &sa_quit, NULL) < 0)
-		msh_close_on_error();
+	init->pipeline = NULL;
+	init->string = NULL;
+	while (42)
+	{
+		init->string = readline("minishell> ");
+		if (init->string == NULL)
+			msh_no_readline(init);
+		if (*init->string)
+			add_history(init->string);
+		else
+		{
+			free(init->string);
+			continue ;
+		}
+		msh_strtok(init);
+		msh_syntax(init);
+		msh_semantics(init);
+		msh_execution(init);
+		msh_clean_em_all(init);
+	}
 }
