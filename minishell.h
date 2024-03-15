@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/15 15:26:42 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/15 15:52:45 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -96,6 +96,8 @@
 # define MINISHELL_H
 # define _DEFAULT_SOURCE
 # define _POSIX_C_SOURCE
+# define START 0
+# define COUNT_COMMANDS 1
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -136,6 +138,6 @@ void	msh_strtok(t_input *init);
 void	msh_clean_pipeline(init);
 /* Cleaning functions. */
 void	msh_cleanup(t_input *init);
-void	msh_close_on_error(void);
+void	msh_close_on_error(t_input *init);
 
 #endif
