@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   msh_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/13 16:14:31 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/15 09:55:09 by fporciel         ###   ########.fr       */
+/*   Created: 2024/03/15 09:41:56 by fporciel          #+#    #+#             */
+/*   Updated: 2024/03/15 10:01:31 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/* ´MiniShell´ is a simple shell for Debian GNU/Linux.
+/* 'MiniShell' is a simple shell for Debian GNU/Linux.
  * Copyright (C) 2024 Federico Porciello
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -32,14 +32,6 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv)
+void	msh_init(char **env)
 {
-	if (argc > 1)
-		msh_init(argv);
-	else
-		msh_init(NULL);
-	msh_signals_handler();
-	msh_loop();
-	msh_cleanup();
-	return (EXIT_SUCCESS);
 }
