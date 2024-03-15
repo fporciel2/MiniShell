@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:14:31 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/15 09:55:09 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/15 11:28:58 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,12 +32,19 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
-	if (argc > 1)
-		msh_init(argv);
-	else
-		msh_init(NULL);
+	t_input	*init;
+
+	if (!envp)
+	{
+		if (write(1, "WARING: no env vars passed to MiniShell!!\n", 42) != 42)
+			return (perror(strerror(errno)), errno);
+	}
+	init = (t_input *)malloc(sizeof(t_input));
+	if (!init)
+		return (perror(strerror(errno)), errno);
+	msh_init();
 	msh_signals_handler();
 	msh_loop();
 	msh_cleanup();

@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/13 15:59:26 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/15 11:12:48 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -116,6 +116,12 @@
 # include <curses.h>
 # include <term.h>
 
+typedef struct s_input
+{
+	char	**envp;
+	char	***pipeline;
+}			t_input;
 
+void	msh_init(char	**envp);
 
 #endif
