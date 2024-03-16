@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:33:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/16 14:48:48 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/16 16:28:44 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -31,12 +31,12 @@
  *
  * MiniShell uses a two-step process to tokenize the input.
  *
- * 1. Quote removal:
+ * 1. Quote tracking:
  *
  * 	* The shell scans the input string from left to right.
  * 	* It identifies any opening and closing quotes (single, `'`, or double,
  * 	`"`).
- * 	* It proceeds with quote removal (see below `QUOTE REMOVAL` for details).
+ * 	* It tracks the indexes of opening and closing quotes.
  *
  * 2. Tokenization:
  *
@@ -51,10 +51,10 @@
  * 	PSEUDOCODE
  *
  * 	function msh_strtok(input_string) {
- * 		#Step 1: Quote Removal (loop through characters)
+ * 		#Step 1: Quote Tracking (loop through characters)
  * 		for char in input_string:
  * 			if char is a quote:
- * 				#Track opening/closing quotes and remove the outermost pairs
+ * 				#Track opening/closing quotes
  * 				#(implementation details below)
  * 			else:
  * 				#Append character to the processed string
@@ -76,7 +76,76 @@
  * 			tokens.append(current_token)
  * 		return tokens
  * 	}
- */
+ *
+ * EXPLANATION
+ *
+ * 	* The `msh_strtok` function takes the input string as input.
+* 	* The first loop iterates through each character and handles quote tracking.
+* 	* The processed string is then tokenized based on delimiters in the IFS
+* 	variable.
+* 	* Another loop iterates through the processed string:
+* 		* If a delimiter is encountered, the current token (if not empty) is
+* 		added to the list of tokens, and the current token is reset.
+* 		* Otherwise, the character is appended to the current token.
+* 	* Finally, the last token (if not empty) is added to the list before
+* 	returning the list of tokens.
+*
+* THE QUOTE TRACKING IMPLEMENTATION
+*
+* MiniShell needs to keep track of whether it's currently inside a quoted string
+* to correctly parse the command line. This involves identifying the start of a
+* quoted string (an opening quote) and its end (a closing quote). MiniShell
+* supports two types of quotes: single quotes - `'` - and double quotes - `"`- .
+*
+* To track quotes, MiniShell uses a simple state machine:
+*
+* PSEUDOCODE
+*
+* 	Initialize state to NORMAL
+* 	Initialize error to FALSE
+* 	for each character in input:
+* 		if state is NORMAL:
+* 			if character is a single quote:
+* 				change state to SINGLE_QUOTE
+* 			else if character is a double quote:
+* 				change state to DOUBLE_QUOTE
+* 			else:
+* 				process character normally
+* 		else if state is SINGLE_QUOTE:
+* 			if character is a single quote:
+* 				change state to NORMAL
+* 			else:
+* 				process character as part of a single-quoted string
+* 		else if state is DOUBLE_QUOTE:
+* 			if character is a double quote:
+* 				change state to NORMAL
+* 			else:
+* 				process character as part of a double-quoted string
+*
+* 	if state is SINGLE_QUOTE or DOUBLE_QUOTE:
+* 		set error state to TRUE
+*
+* EXPLANATION
+*
+* The above pseudocode outline a basic state machine with three states:
+*
+* 1. NORMAL: The defauls state where characters are processed normally. If a
+* quote is encountered, the state changes to either SINGLE_QUOTE or DOUBLE_QUOTE
+* depending on the type of quote.
+* 2. SINGLE_QUOTE: In this state, all characters are treated as part of a
+* single-quoted string until another single quote is encountered, which switches
+* the state back to NORMAL. Single-quoted strings preserve the literal value of
+* each character within the quotes.
+* 3. DOUBLE_QUOTES: Similar to SINGLE_QUOTE, but for double-quoted strings. The
+* state remains DOUBLE_QUOTE until another double quote is encountered.
+* Double-quoted strings also preserve the literal value of characters but allow
+* certain expansions (like variable expansion).
+*
+* An unclosed quote typically results in a continuation prompt, allowing the
+* user to continue the command on the next line and complete the quotation.
+* However, if the input ends without a closing quote, MiniShell considers this a
+* syntax error.
+*/
 
 #include "minishell.h"
 
