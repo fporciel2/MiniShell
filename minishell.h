@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/15 15:52:45 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/16 12:53:28 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -135,7 +135,7 @@ void	msh_handle_igquit(int sig);
 void	msh_loop(t_input *init);
 /* Tokenizer/Lexicon-analyzer's functions.*/
 void	msh_strtok(t_input *init);
-void	msh_clean_pipeline(init);
+void	msh_clean_pipeline(t_input *init);
 /* Cleaning functions. */
 void	msh_cleanup(t_input *init);
 void	msh_close_on_error(t_input *init);
