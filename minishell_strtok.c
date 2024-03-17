@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:33:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/17 15:42:04 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/17 16:21:26 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -149,6 +149,8 @@
 
 #include "minishell.h"
 
+/*The `msh_init_parameters` function initializes the `msh_strtok` function for
+ * each new input string.*/
 static void	msh_init_parameters(t_input *init)
 {
 	init->i = 0;
@@ -159,6 +161,11 @@ static void	msh_init_parameters(t_input *init)
 	init->pipeline = NULL;
 }
 
+/*The `msh_quote_state` state machine handles the quote tracking and sets
+ * eventually the `open_quote` variable to 1 if the closing quote is missing,
+ * so that the command line can wait appropriately for the input continuation
+ * and the closing quote, based on the `open_quote` and `quote_state` variables.
+ * */
 static void	msh_quote_state(t_input *init, char quote)
 {
 	if (quote == 34)
@@ -177,15 +184,20 @@ static void	msh_quote_state(t_input *init, char quote)
 		init->open_quote = 1;
 }
 
+/*`msh_is_ifs` detects whether the current character is a delimiter. It doesn't
+ * check whether the eventual `newline` character follows the escape character.
+ * That will be checked by the quotation remover.*/
 static int	msh_is_ifs(t_input *init)
 {
 	if (((init->string[init->i] == 32) || (init->string[init->i] == 9)
-		|| (init->string[init->i] == 10) || (init->string[init->i] == 13))
+		|| (init->string[init->i] == 13) || (init->string[init->i] == 10))
 		&& ((init->i == 0) || (init->string[init->i - 1] != 92)))
 		return (1);
 	return (0);
 }
 
+/* `msh_is_pipe` detects whether the current character is an actual pipe or a
+ * literal pipe or another character.*/
 static int	msh_is_pipe(t_input *init)
 {
 	if ((init->string[init->i] == 124)
@@ -194,6 +206,8 @@ static int	msh_is_pipe(t_input *init)
 	return (0);
 }
 
+/* `msh_strtok` slides the input string looking for delimiters, quotes, pipes or
+ * simple characters to append, calling a different function for any case.*/
 void	msh_strtok(t_input *init)
 {
 	msh_init_parameters(init);
