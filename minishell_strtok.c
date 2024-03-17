@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:33:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/16 16:28:44 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/17 15:17:05 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -149,6 +149,46 @@
 
 #include "minishell.h"
 
+static void	msh_init_parameters(t_input *init)
+{
+	init->i = 0;
+	init->pipe_count = 0;
+	init->token_count = 0;
+	init->open_quote = 0;
+	init->quote_state = NORMAL;
+}
+
+static void	msh_quote_state(t_input *init, char quote)
+{
+	if (quote == 34)
+		init->quote_state = DOUBLE_QUOTE;
+	else
+		init->quote_state = SINGLE_QUOTE;
+	while (init->string[init->i] && (init->string[init->i] != quote))
+	{
+		msh_append_char(init);
+		init->i++;
+	}
+}
+
 void	msh_strtok(t_input *init)
 {
+	msh_init_parameters(init);
+	while (init->string[init->i])
+	{
+		if (((init->string[init->i] == 34) || (init->string[init->i] == 39))
+			&& ((init->i == 0) || (init->string[init->i - 1] != 92)))
+			msh_quote_state(init, init->string[init->i]);
+		else if (msh_is_ifs(init->string[init->i]))
+		{
+			while (msh_is_ifs(init->string[init->i]))
+				init->i++;
+			msh_split_token(init);
+		}
+		else if (msh_is_pipe(init->string[init->i]))
+			msh_split_pipeline(init);
+		else
+			msh_append_char(init);
+		init->i++;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/16 12:53:28 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/17 15:09:39 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -98,6 +98,9 @@
 # define _POSIX_C_SOURCE
 # define START 0
 # define COUNT_COMMANDS 1
+# define NORMAL 0
+# define SINGLE_QUOTE 1
+# define DOUBLE_QUOTE 2
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -125,10 +128,15 @@ typedef struct s_input
 	char	**envp;
 	char	*string;
 	char	***pipeline;
+	size_t	pipe_count;
+	size_t	token_count;
+	size_t	i;
+	int		open_quote;
+	int		quote_state;
 }			t_input;
 
 /* Initialization functions. */
-void	msh_init(char	**envp, t_input *init);
+void	msh_init(char **envp, t_input *init);
 void	msh_handle_sigint(int sig);
 void	msh_handle_igquit(int sig);
 /* Main loop's functions. */
