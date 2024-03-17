@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:33:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/17 15:17:05 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/17 15:42:04 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -156,6 +156,7 @@ static void	msh_init_parameters(t_input *init)
 	init->token_count = 0;
 	init->open_quote = 0;
 	init->quote_state = NORMAL;
+	init->pipeline = NULL;
 }
 
 static void	msh_quote_state(t_input *init, char quote)
@@ -164,11 +165,33 @@ static void	msh_quote_state(t_input *init, char quote)
 		init->quote_state = DOUBLE_QUOTE;
 	else
 		init->quote_state = SINGLE_QUOTE;
+	init->i++;
 	while (init->string[init->i] && (init->string[init->i] != quote))
 	{
 		msh_append_char(init);
 		init->i++;
 	}
+	if (init->string[init->i])
+		init->quote_state = NORMAL;
+	else
+		init->open_quote = 1;
+}
+
+static int	msh_is_ifs(t_input *init)
+{
+	if (((init->string[init->i] == 32) || (init->string[init->i] == 9)
+		|| (init->string[init->i] == 10) || (init->string[init->i] == 13))
+		&& ((init->i == 0) || (init->string[init->i - 1] != 92)))
+		return (1);
+	return (0);
+}
+
+static int	msh_is_pipe(t_input *init)
+{
+	if ((init->string[init->i] == 124)
+		&& ((init->i == 0) || (init->string[init->i - 1] != 92)))
+		return (1);
+	return (0);
 }
 
 void	msh_strtok(t_input *init)
@@ -179,7 +202,7 @@ void	msh_strtok(t_input *init)
 		if (((init->string[init->i] == 34) || (init->string[init->i] == 39))
 			&& ((init->i == 0) || (init->string[init->i - 1] != 92)))
 			msh_quote_state(init, init->string[init->i]);
-		else if (msh_is_ifs(init->string[init->i]))
+		else if (msh_is_ifs(init))
 		{
 			while (msh_is_ifs(init->string[init->i]))
 				init->i++;
