@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 15:51:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/19 12:22:26 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/19 16:18:28 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -46,22 +46,54 @@ static void	msh_init_pipeline(t_input *init)
 	if (!init->pipeline[0][0])
 		msh_close_on_error(init);
 	init->pipeline[0][0][1] = 0;
+	init->pipeline[0][0][0] = init->string[init->i];
+	init->pipe_count = 0;
+	init->token_count = 0;
+	init->str_count = 0;
 }
 
 void	msh_split_token(t_input *init)
 {
 	if (init->i == 0)
+	{
 		msh_init_pipeline(init);
+		return ;
+	}
 }
 
 void	msh_split_pipeline(t_input *init)
 {
 	if (init->i == 0)
+	{
 		msh_init_pipeline(init);
+		return ;
+	}
 }
 
 void	msh_append_char(t_input *init)
 {
+	size_t	j;
+	char	*str;
+
 	if (init->i == 0)
+	{
 		msh_init_pipeline(init);
+		return ;
+	}
+	j = 0;
+	while (init->pipeline[init->pipe_count][init->token_count][j])
+		j++;
+	str = (char *)malloc(sizeof(char) * (j + 2));
+	if (!str)
+		msh_close_on_error(init);
+	j = 0;
+	while (init->pipeline[init->pipe_count][init->token_count][j])
+	{
+		str[j] = init->pipeline[init->pipe_count][init->token_count][j];
+		j++;
+	}
+	str[j] = init->string[init->i];
+	str[j + 1] = 0;
+	free(init->pipeline[init->pipe_count][init->token_count]);
+	init->pipeline[init->pipe_count][init->token_count] = str;
 }
