@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:33:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/19 12:31:06 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/19 12:58:32 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -158,6 +158,7 @@ static void	msh_init_parameters(t_input *init)
 	init->token_count = 0;
 	init->open_quote = 0;
 	init->quote_state = NORMAL;
+	init->pipe_state = NORMAL:
 	init->pipeline = NULL;
 }
 

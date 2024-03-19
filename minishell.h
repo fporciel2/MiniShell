@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/19 11:46:12 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/19 12:59:45 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -101,6 +101,7 @@
 # define NORMAL 0
 # define SINGLE_QUOTE 1
 # define DOUBLE_QUOTE 2
+# define OPEN_PIPE 1
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -133,6 +134,7 @@ typedef struct s_input
 	size_t	i;
 	int		open_quote;
 	int		quote_state;
+	int		pipe_state;
 }			t_input;
 
 /* Initialization functions. */
