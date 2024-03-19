@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 11:31:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/16 12:53:14 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/19 12:11:38 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,6 +32,23 @@
 
 #include "minishell.h"
 
+void	msh_clean_envp(char **envp)
+{
+	size_t	i;
+
+	i = 0;
+	if (!envp)
+		return ;
+	while (envp[i])
+		i++;
+	while (envp[--i])
+	{
+		free(envp[i]);
+		envp[i] = NULL;
+	}
+	free(envp);
+}
+
 void	msh_clean_pipeline(t_input *init)
 {
 }
@@ -40,6 +57,8 @@ void	msh_close_on_error(t_input *init)
 {
 	if (init)
 	{
+		if (init->envp)
+			msh_clean_envp(init->envp);
 		if (init->string)
 			free(init->string);
 		if (init->pipeline)
