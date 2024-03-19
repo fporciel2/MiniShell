@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_first_get_env.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/13 16:14:31 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/19 11:36:14 by fporciel         ###   ########.fr       */
+/*   Created: 2024/03/19 11:36:53 by fporciel          #+#    #+#             */
+/*   Updated: 2024/03/19 11:50:41 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/* ´MiniShell´ is a simple shell for Debian GNU/Linux.
+/* `MiniShell` is a simple shell for Debian GNU/Linux.
  * Copyright (C) 2024 Federico Porciello
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -32,21 +32,60 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+static int	msh_clean_envs(char **envs, size_t i)
 {
-	t_input	*init;
-	char	**envs;
+	i--;
+	while (i--)
+		free(envs[i]);
+	if (envs[i])
+		free(envs[i]);
+	free(envs);
+	return (0);
+}
 
-	if (!envp || !msh_first_get_env(envp, &envs))
+char	*msh_strdup(char *env)
+{
+	size_t	i;
+	char	*str;
+
+	i = 0;
+	if (!env)
+		return (NULL);
+	while (env[i])
+		i++;
+	str = (char *)malloc(sizeof(char) * (i + 1));
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (env[i])
 	{
-		if (write(1, "WARNING: no env vars passed to MiniShell!\n", 42) != 42)
-			return (perror(strerror(errno)), errno);
+		str[i] = env[i];
+		i++;
 	}
-	init = (t_input *)malloc(sizeof(t_input));
-	if (!init)
-		return (perror(strerror(errno)), errno);
-	msh_init(envs, init);
-	msh_loop(init);
-	msh_cleanup(init);
-	return (EXIT_SUCCESS);
+	str[i] = 0;
+	return (str);
+}
+
+int	msh_first_get_env(char **envp, char ***envs)
+{
+	size_t	i;
+
+	i = 0;
+	if (!envp)
+		return (0);
+	while (envp[i])
+		i++;
+	*envs = (char **)malloc(sizeof(char *) * (i + 1));
+	if (!*envs)
+		return (0);
+	(*envs)[i] = NULL;
+	i = 0;
+	while (envp[i])
+	{
+		(*envs)[i] = msh_strdup(envp[i]);
+		if (!(*envs)[i])
+			return (msh_clean_envs(*envs, i));
+		i++;
+	}
+	return (1);
 }

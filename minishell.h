@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/17 15:45:47 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/19 11:46:12 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -136,6 +136,7 @@ typedef struct s_input
 }			t_input;
 
 /* Initialization functions. */
+int		msh_first_get_env(char **envp, char ***envs);
 void	msh_init(char **envp, t_input *init);
 void	msh_handle_sigint(int sig);
 void	msh_handle_igquit(int sig);
@@ -150,5 +151,7 @@ void	msh_append_char(t_input *init);
 void	msh_cleanup(t_input *init);
 void	msh_close_on_error(t_input *init);
 void	msh_clean_pipeline(t_input *init);
+/* Utils functions. */
+char	*msh_strdup(char *env);
 
 #endif
