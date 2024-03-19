@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:33:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/17 16:21:26 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/19 12:31:06 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -172,6 +172,7 @@ static void	msh_quote_state(t_input *init, char quote)
 		init->quote_state = DOUBLE_QUOTE;
 	else
 		init->quote_state = SINGLE_QUOTE;
+	msh_append_char(init);
 	init->i++;
 	while (init->string[init->i] && (init->string[init->i] != quote))
 	{
@@ -179,7 +180,10 @@ static void	msh_quote_state(t_input *init, char quote)
 		init->i++;
 	}
 	if (init->string[init->i])
+	{
+		msh_append_char(init);
 		init->quote_state = NORMAL;
+	}
 	else
 		init->open_quote = 1;
 }
