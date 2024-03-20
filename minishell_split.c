@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 15:51:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/20 11:07:04 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/20 14:37:13 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -69,9 +69,13 @@ void	msh_split_token(t_input *init)
 		msh_init_pipeline(init);
 		return ;
 	}
-	matrix = (char **)malloc(sizeof(char *) * 2);
+	init->token_count++;
+	matrix = (char **)malloc(sizeof(char *) * (init->token_count + 2));
 	if (!matrix)
 		msh_close_on_error(init);
+	msh_copy_matrix(init, &matrix);
+	msh_clean_current_matrix(init);
+	init->pipeline[init->pipe_count] = matrix;
 }
 
 void	msh_append_char(t_input *init)
