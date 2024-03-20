@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 15:51:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/20 14:37:13 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/20 15:59:13 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -31,6 +31,11 @@
  */
 
 #include "minishell.h"
+
+static void	msh_clean_current_matrix(t_input *init)
+{
+	size_t	
+}
 
 static void	msh_init_pipeline(t_input *init)
 {
@@ -63,19 +68,27 @@ void	msh_split_pipeline(t_input *init)
 void	msh_split_token(t_input *init)
 {
 	char	**matrix;
+	size_t	j;
 
 	if (init->i == 0)
 	{
 		msh_init_pipeline(init);
 		return ;
 	}
+	j = 0;
 	init->token_count++;
 	matrix = (char **)malloc(sizeof(char *) * (init->token_count + 2));
 	if (!matrix)
 		msh_close_on_error(init);
-	msh_copy_matrix(init, &matrix);
+	while (init->pipeline[init->pipe_count][j])
+	{
+		matrix[j] = init->pipeline[init->pipe_count][j];
+		j++;
+	}
+	matrix[j] = NULL;
 	msh_clean_current_matrix(init);
 	init->pipeline[init->pipe_count] = matrix;
+	msh_append_char(init);
 }
 
 void	msh_append_char(t_input *init)
