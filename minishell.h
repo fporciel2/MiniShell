@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/20 15:28:43 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/21 12:35:36 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -153,6 +153,8 @@ void	msh_append_char(t_input *init);
 void	msh_cleanup(t_input *init);
 void	msh_close_on_error(t_input *init);
 void	msh_clean_pipeline(t_input *init);
+void	msh_clean_current_matrix(t_input *init);
+void	msh_clean_current_container(t_input *init);
 /* Utils functions. */
 char	*msh_strdup(char *env);
 
