@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 15:51:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/21 13:02:26 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/21 13:28:03 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,21 +32,29 @@
 
 #include "minishell.h"
 
-void	msh_clean_current_matrix(t_input *init)
+static void	msh_set_new_token(t_input *init, char **matrix, char ***container,
+		size_t j)
 {
-	ssize_t	j;
-
-	j = 0;
-	while (init->pipeline[init->pipe_count][j])
-		j++;
-	j--;
-	while (j >= 0)
+	if (matrix)
 	{
-		free(init->pipeline[init->pipe_count][j]);
-		init->pipeline[init->pipe_count][j] = NULL;
+		matrix[j] = (char *)malloc(sizeof(char) * 2);
+		if (!matrix[j])
+			msh_close_on_error(init);
+		matrix[j][1] = 0;
+		matrix[j][0] = init->string[init->i];
 	}
-	free(init->pipeline[init->pipe_count]);
-	init->pipeline[init->pipe_count] = NULL;
+	if (container)
+	{
+		container[j] = (char **)malloc(sizeof(char *) * 2);
+		if (!container[j])
+			msh_close_on_error(init);
+		container[j][1] = NULL;
+		container[j][0] = (char *)malloc(sizeof(char) * 2);
+		if (!container[j][0])
+			msh_close_on_error(init);
+		container[j][0][1] = 0;
+		container[j][0][0] = init->string[init->i];
+	}
 }
 
 static void	msh_init_pipeline(t_input *init)
@@ -88,15 +96,8 @@ void	msh_split_pipeline(t_input *init)
 		container[j] = init->pipeline[j];
 		j++;
 	}
-	container[j] = (char **)malloc(sizeof(char *) * 2);
-	if (!container[j])
-		msh_close_on_error(init);
-	container[j][1] = NULL;
-	container[j][0] = (char *)malloc(sizeof(char) * 2);
-	if (!container[j][0])
-		msh_close_on_error(init);
-	container[j][0][1] = 0;
-	container[j][0][0] = init->string[init->i];
+	container[j] = NULL;
+	msh_set_new_token(init, NULL, container, j);
 	msh_clean_current_container(init);
 	init->pipeline = container;
 }
@@ -121,11 +122,8 @@ void	msh_split_token(t_input *init)
 		matrix[j] = init->pipeline[init->pipe_count][j];
 		j++;
 	}
-	matrix[j] = (char *)malloc(sizeof(char) * 2);
-	if (!matrix[j])
-		msh_close_on_error(init);
-	matrix[j][1] = 0;
-	matrix[j][0] = init->string[init->i];
+	matrix[j] = NULL;
+	msh_set_new_token(init, matrix, NULL, j);
 	msh_clean_current_matrix(init);
 	init->pipeline[init->pipe_count] = matrix;
 }
