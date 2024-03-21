@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 15:51:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/20 16:07:00 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/21 12:12:11 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -70,11 +70,28 @@ static void	msh_init_pipeline(t_input *init)
 
 void	msh_split_pipeline(t_input *init)
 {
+	char	***container;
+	size_t	j;
+
 	if (init->i == 0)
 	{
 		msh_init_pipeline(init);
 		return ;
 	}
+	j = 0;
+	init->pipe_count++;
+	container = (char ***)malloc(sizeof(char **) * (init->pipe_count + 2));
+	if (!container)
+		msh_close_on_error(init);
+	while (init->pipeline[j])
+	{
+		container[j] = init->pipeline[j];
+		j++;
+	}
+	container[j] = NULL;
+	msh_clean_current_container(init);
+	init->pipeline = container;
+	msh_append_char(init);
 }
 
 void	msh_split_token(t_input *init)
