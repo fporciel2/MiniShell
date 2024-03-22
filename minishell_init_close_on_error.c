@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_first_get_env.c                          :+:      :+:    :+:   */
+/*   minishell_init_close_on_error.c                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/19 11:36:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 13:09:08 by fporciel         ###   ########.fr       */
+/*   Created: 2024/03/22 12:09:18 by fporciel          #+#    #+#             */
+/*   Updated: 2024/03/22 13:07:23 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/* `MiniShell` is a simple shell for Debian GNU/Linux.
+/* ´MiniShell´ is a simple shell for Debian GNU/Linux.
  * Copyright (C) 2024 Federico Porciello
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -32,64 +32,29 @@
 
 #include "minishell.h"
 
-static int	msh_clean_envs(char **envs, size_t i)
+static void	msh_remove_envs(t_input *init)
 {
-	ssize_t	j;
+	ssize_t	i;
 
-	i--;
-	j = (ssize_t)i;
-	while (j >= 0)
+	i = 0;
+	if (init->envp)
 	{
-		free(envs[j]);
-		j--;
+		while (init->envp[i])
+			i++;
+		i--;
+		while (i >= 0)
+		{
+			free(init->envp[i]);
+			i--;
+		}
+		free(init->envp);
 	}
-	free(envs);
-	return (0);
 }
 
-char	*msh_strdup(char *env)
+void	msh_init_close_on_error(t_input *init)
 {
-	size_t	i;
-	char	*str;
-
-	i = 0;
-	if (!env)
-		return (NULL);
-	while (env[i])
-		i++;
-	str = (char *)malloc(sizeof(char) * (i + 1));
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (env[i])
-	{
-		str[i] = env[i];
-		i++;
-	}
-	str[i] = 0;
-	return (str);
-}
-
-int	msh_first_get_env(char **envp, char ***envs)
-{
-	size_t	i;
-
-	i = 0;
-	if (!envp)
-		return (0);
-	while (envp[i])
-		i++;
-	*envs = (char **)malloc(sizeof(char *) * (i + 1));
-	if (!*envs)
-		return (0);
-	(*envs)[i] = NULL;
-	i = 0;
-	while (envp[i])
-	{
-		(*envs)[i] = msh_strdup(envp[i]);
-		if (!(*envs)[i])
-			return (msh_clean_envs(*envs, i));
-		i++;
-	}
-	return (1);
+	msh_remove_envs(init);
+	free(init);
+	perror(strerror(errno));
+	exit(EXIT_FAILURE);
 }
