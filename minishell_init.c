@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 12:29:22 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 10:13:49 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/22 10:50:02 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,14 +32,16 @@
 
 #include "minishell.h"
 
+static const t_input	*g_init;
+
 void	msh_handle_sigint(int sig)
 {
-	t_input	*fake;
+	t_input	*init;
 
-	fake = NULL;
-	g_last_signal = sig;
+	(void)sig;
+	init = g_init;
 	if (write(STDOUT_FILENO, "\n", 1) < 0)
-		msh_close_on_error(fake);
+		msh_handle_sigint_close_on_error(init);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
@@ -47,7 +49,7 @@ void	msh_handle_sigint(int sig)
 
 void	msh_handle_sigquit(int sig)
 {
-	g_last_signal = sig;
+	(void)sig;
 }
 
 void	msh_init(char **envp, t_input *init)
@@ -56,6 +58,7 @@ void	msh_init(char **envp, t_input *init)
 	struct sigaction	sa_quit;
 	
 	init->envp = envp;
+	g_init = init;
 	sa_int.sa_handler = msh_handle_sigint;
 	if (sigemptyset(&sa_int.sa_mask) < 0)
 		msh_init_close_on_error(init);
