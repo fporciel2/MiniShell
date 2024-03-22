@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_loop.c                                   :+:      :+:    :+:   */
+/*   minishell_loop_memset.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/15 14:48:11 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 14:39:44 by fporciel         ###   ########.fr       */
+/*   Created: 2024/03/22 14:33:50 by fporciel          #+#    #+#             */
+/*   Updated: 2024/03/22 14:35:48 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,40 +32,4 @@
 
 #include "minishell.h"
 
-static void	msh_loop_close_on_error(t_input *init)
-{
-	msh_loop_clean_all(init);
-	rl_clear_history();
-	perror(strerror(errno));
-	exit(EXIT_FAILURE);
-}
 
-static void	msh_loop_close_on_readline(t_input *init)
-{
-	msh_loop_clean_all(init);
-	rl_clear_history();
-	if (write(1, "\n", 1) < 0)
-		exit(EXIT_FAILURE);
-	exit(EXIT_SUCCESS);
-}
-
-void	msh_loop(t_input *init)
-{
-	while (42)
-	{
-		msh_loop_memset(init);
-		init->string = readline("minishell> ");
-		if (init->string == NULL)
-			msh_loop_close_on_readline(init);
-		if (*init->string)
-			add_history(init->string);
-		else
-		{
-			free(init->string);
-			continue ;
-		}
-		if (!msh_strtok(init) || !msh_syntax(init) || !msh_semantics(init)
-			|| !msh_execution(init))
-			msh_loop_close_on_error(init);
-	}
-}
