@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 12:29:22 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 10:50:02 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/22 10:59:34 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -52,6 +52,18 @@ void	msh_handle_sigquit(int sig)
 	(void)sig;
 }
 
+void	msh_initialize(t_input *init)
+{
+	init->string = NULL;
+	init->pipeline = NULL;
+	init->pipe_count = START;
+	init->token_count = START;
+	init->i = START;
+	init->open_quote = START;
+	init->quote_state = START;
+	init->pipe_state = START;
+}
+
 void	msh_init(char **envp, t_input *init)
 {
 	struct sigaction	sa_int;
@@ -71,4 +83,5 @@ void	msh_init(char **envp, t_input *init)
 	sa_quit.sa_flags = 0;
 	if (sigaction(SIGQUIT, &sa_quit, NULL) < 0)
 		msh_init_close_on_error(init);
+	msh_initialize(init);
 }

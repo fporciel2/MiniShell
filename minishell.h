@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 10:49:26 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/22 11:01:28 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -140,6 +140,7 @@ int		msh_first_get_env(char **envp, char ***envs);
 void	msh_init(char **envp, t_input *init);
 void	msh_handle_sigint(int sig);
 void	msh_handle_igquit(int sig);
+void	msh_initialize(t_input *init);
 /* Main loop's functions. */
 void	msh_loop(t_input *init);
 /* Tokenizer/Lexicon-analyzer's functions.*/
