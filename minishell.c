@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:14:31 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 10:02:13 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:26:08 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,19 +32,35 @@
 
 #include "minishell.h"
 
+static int	msh_remove_envs(char **envs)
+{
+	ssize_t	i;
+
+	i = 0;
+	while (envs[i])
+		i++;
+	i--;
+	while (i >= 0)
+	{
+		free(envs[i]);
+		i--;
+	}
+	return (free(envs), perror("Error"), errno);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_input	*init;
 	char	**envs;
 
 	if ((argc != 1) || !envp || !msh_first_get_env(envp, &envs))
-		return (perror(strerror(errno)), errno);
+		return (perror("Error"), errno);
 	init = (t_input *)malloc(sizeof(t_input));
 	if (!init)
-		return (perror(strerror(errno)), errno);
+		return (msh_remove_envs(envs));
 	msh_init(envs, init);
 	msh_loop(init);
-	msh_cleanup(init);
+	msh_loop_clean_all(init);
 	init = NULL;
 	return (42);
 }

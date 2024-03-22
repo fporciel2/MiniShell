@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 14:48:11 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 14:39:44 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/22 14:55:29 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -36,7 +36,7 @@ static void	msh_loop_close_on_error(t_input *init)
 {
 	msh_loop_clean_all(init);
 	rl_clear_history();
-	perror(strerror(errno));
+	perror("Error");
 	exit(EXIT_FAILURE);
 }
 
