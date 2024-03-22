@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 14:28:39 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/22 15:36:42 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -97,7 +97,7 @@
 # define _DEFAULT_SOURCE
 # define _POSIX_C_SOURCE
 # define START 0
-# define COUNT_COMMANDS 1
+# define NO_ERROR 0
 # define NORMAL 0
 # define SINGLE_QUOTE 1
 # define DOUBLE_QUOTE 2
