@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 14:48:11 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/20 13:59:47 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/22 14:27:38 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,32 +32,20 @@
 
 #include "minishell.h"
 
-static void	msh_clean_em_all(t_input *init)
-{
-	if (init->string)
-		free(init->string);
-	if (init->pipeline)
-		msh_clean_pipeline(init);
-	init->string = NULL;
-	init->pipeline = NULL;
-}
-
 static void	msh_no_readline(t_input *init)
 {
-	msh_clean_em_all(init);
-	msh_cleaunp(init);
+	msh_loop_clean_all(init);
 	rl_clear_history();
 	if (write(1, "\n", 1) < 0)
-		msh_close_on_error(init);
+		exit(EXIT_FAILURE);
 	exit(EXIT_SUCCESS);
 }
 
 void	msh_loop(t_input *init)
 {
-	init->pipeline = NULL;
-	init->string = NULL;
 	while (42)
 	{
+		msh_loop_memset(init);
 		init->string = readline("minishell> ");
 		if (init->string == NULL)
 			msh_no_readline(init);
@@ -68,11 +56,8 @@ void	msh_loop(t_input *init)
 			free(init->string);
 			continue ;
 		}
-		msh_clean_pipeline(init);
-		msh_strtok(init);
-		msh_syntax(init);
-		msh_semantics(init);
-		msh_execution(init);
-		msh_clean_em_all(init);
+		if (!msh_strtok(init) || !msh_syntax(init) || !msh_semantics(init)
+			|| !msh_execution(init))
+			msh_loop_close_on_error(init);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 12:53:10 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/22 14:28:39 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -133,6 +133,7 @@ typedef struct s_input
 	int		open_quote;
 	int		quote_state;
 	int		pipe_state;
+	int		error_code;
 }			t_input;
 
 /* Initialization functions. */
@@ -144,14 +145,17 @@ void	msh_initialize(t_input *init);
 /* Main loop's functions. */
 void	msh_loop(t_input *init);
 /* Tokenizer/Lexicon-analyzer's functions.*/
-void	msh_strtok(t_input *init);
-void	msh_split_token(t_input *init);
-void	msh_split_pipeline(t_input *init);
-void	msh_append_char(t_input *init);
+int		msh_strtok(t_input *init);
+int		msh_split_token(t_input *init);
+int		msh_split_pipeline(t_input *init);
+int		msh_append_char(t_input *init);
 /* Cleaning functions. */
+void	msh_loop_clean_all(t_input *init);
+void	msh_loop_memset(t_input *init);
 /* Closing functions. */
 void	msh_init_close_on_error(t_input *init);
 void	msh_handle_sigint_close_on_error(t_input *init);
+void	msh_loop_close_on_error(t_input *init);
 /* Utils functions. */
 char	*msh_strdup(char *env);
 
