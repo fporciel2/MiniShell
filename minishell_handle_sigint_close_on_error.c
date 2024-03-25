@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/22 13:12:50 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 14:03:07 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/25 16:18:41 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -50,13 +50,13 @@ static void	msh_destroy_matrix(char **matrix)
 	free(matrix);
 }
 
-void	msh_handle_sigint_close_on_error(t_input *init)
+void	msh_handle_sigint_close_on_error(const t_input *init)
 {
 	ssize_t	j;
 
 	j = 0;
 	if (init->string)
-		free(string);
+		free(init->string);
 	msh_destroy_matrix(init->envp);
 	if (init->pipeline)
 	{

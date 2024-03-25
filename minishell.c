@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 16:14:31 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 15:26:08 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/25 15:47:42 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -62,5 +62,6 @@ int	main(int argc, char **argv, char **envp)
 	msh_loop(init);
 	msh_loop_clean_all(init);
 	init = NULL;
+	(void)argv;
 	return (42);
 }

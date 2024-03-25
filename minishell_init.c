@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 12:29:22 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 10:59:34 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/25 16:04:22 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -36,7 +36,7 @@ static const t_input	*g_init;
 
 void	msh_handle_sigint(int sig)
 {
-	t_input	*init;
+	const t_input	*init;
 
 	(void)sig;
 	init = g_init;
@@ -70,7 +70,7 @@ void	msh_init(char **envp, t_input *init)
 	struct sigaction	sa_quit;
 	
 	init->envp = envp;
-	g_init = init;
+	g_init = (const t_input *)init;
 	sa_int.sa_handler = msh_handle_sigint;
 	if (sigemptyset(&sa_int.sa_mask) < 0)
 		msh_init_close_on_error(init);

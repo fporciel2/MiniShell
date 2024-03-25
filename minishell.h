@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/25 15:13:50 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/25 16:17:34 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -156,7 +156,7 @@ void	msh_split_clean_pipeline(t_input *init);
 void	msh_split_clean_command(char **command);
 /* Closing functions. */
 void	msh_init_close_on_error(t_input *init);
-void	msh_handle_sigint_close_on_error(t_input *init);
+void	msh_handle_sigint_close_on_error(const t_input *init);
 void	msh_loop_close_on_error(t_input *init);
 /* Utils functions. */
 char	*msh_strdup(char *env);
