@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 14:48:11 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 14:55:29 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/25 15:41:08 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -51,9 +51,14 @@ static void	msh_loop_close_on_readline(t_input *init)
 
 void	msh_loop(t_input *init)
 {
+	size_t	j;
+	size_t	i;
+
 	while (42)
 	{
+		printf("EXECUTING TEST!\N");
 		msh_loop_memset(init);
+		printf("Memset works!\n");
 		init->string = readline("minishell> ");
 		if (init->string == NULL)
 			msh_loop_close_on_readline(init);
@@ -64,8 +69,22 @@ void	msh_loop(t_input *init)
 			free(init->string);
 			continue ;
 		}
-		if (!msh_strtok(init) || !msh_syntax(init) || !msh_semantics(init)
-			|| !msh_execution(init))
+		if (!msh_strtok(init)/* || !msh_syntax(init) || !msh_semantics(init)
+			|| !msh_execution(init)*/)
 			msh_loop_close_on_error(init);
+		if (!init->pipeline)
+			continue ;
+		j = 0;
+		while (init->pipeline[j])
+		{
+			i = 0;
+			while (init->pipeline[j][i])
+			{
+				printf("%s\n", init->pipeline[j][i]);
+				i++;
+			}
+			printf("\n\n");
+			j++;
+		}
 	}
 }
