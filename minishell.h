@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/22 15:36:42 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/25 10:46:56 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -133,7 +133,7 @@ typedef struct s_input
 	int		open_quote;
 	int		quote_state;
 	int		pipe_state;
-	int		error_code;
+	int		error;
 }			t_input;
 
 /* Initialization functions. */

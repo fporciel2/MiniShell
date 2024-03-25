@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:33:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/19 12:58:32 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/25 11:17:55 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -149,19 +149,6 @@
 
 #include "minishell.h"
 
-/*The `msh_init_parameters` function initializes the `msh_strtok` function for
- * each new input string.*/
-static void	msh_init_parameters(t_input *init)
-{
-	init->i = 0;
-	init->pipe_count = 0;
-	init->token_count = 0;
-	init->open_quote = 0;
-	init->quote_state = NORMAL;
-	init->pipe_state = NORMAL:
-	init->pipeline = NULL;
-}
-
 /*The `msh_quote_state` state machine handles the quote tracking and sets
  * eventually the `open_quote` variable to 1 if the closing quote is missing,
  * so that the command line can wait appropriately for the input continuation
@@ -194,9 +181,17 @@ static void	msh_quote_state(t_input *init, char quote)
  * That will be checked by the quotation remover.*/
 static int	msh_is_ifs(t_input *init)
 {
-	if (((init->string[init->i] == 32) || (init->string[init->i] == 9)
+	if ((((init->string[init->i] == 32) || (init->string[init->i] == 9)
 		|| (init->string[init->i] == 13) || (init->string[init->i] == 10))
 		&& ((init->i == 0) || (init->string[init->i - 1] != 92)))
+		|| ((init->string[init->i] == 60) && ((init->i == 0)
+			|| (init->string[init->i - 1] != 60)
+			|| ((init->string[init->i - 1] == 60) && ((init->i - 1) != 0)
+				&& (init->string[init->i - 2] == 60))))
+		|| ((init->string[init->i] == 62) && ((init->i == 0)
+			|| (init->string[init->i - 1] != 62)
+			|| ((init->string[init->i - 1] == 62) && ((init->i - 1) != 0)
+				&& (init->string[init->i - 2] == 62)))))
 		return (1);
 	return (0);
 }
@@ -213,24 +208,25 @@ static int	msh_is_pipe(t_input *init)
 
 /* `msh_strtok` slides the input string looking for delimiters, quotes, pipes or
  * simple characters to append, calling a different function for any case.*/
-void	msh_strtok(t_input *init)
+int	msh_strtok(t_input *init)
 {
-	msh_init_parameters(init);
-	while (init->string[init->i])
+	init->error = 1;
+	while (init->error && init->string[init->i])
 	{
 		if (((init->string[init->i] == 34) || (init->string[init->i] == 39))
 			&& ((init->i == 0) || (init->string[init->i - 1] != 92)))
-			msh_quote_state(init, init->string[init->i]);
+			init->error = msh_quote_state(init, init->string[init->i]);
 		else if (msh_is_ifs(init))
 		{
 			while (msh_is_ifs(init->string[init->i]))
 				init->i++;
-			msh_split_token(init);
+			init->error = msh_split_token(init);
 		}
 		else if (msh_is_pipe(init->string[init->i]))
-			msh_split_pipeline(init);
+			init->error = msh_split_pipeline(init);
 		else
-			msh_append_char(init);
+			init->error = msh_append_char(init);
 		init->i++;
 	}
+	return (init->error);
 }
