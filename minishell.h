@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/25 13:20:11 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/25 15:13:50 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -152,8 +152,8 @@ int		msh_append_char(t_input *init);
 /* Cleaning functions. */
 void	msh_loop_clean_all(t_input *init);
 void	msh_loop_memset(t_input *init);
-void	msh_clean_current_container(t_input *init);
-void	msh_clean_current_matrix(t_input *init);
+void	msh_split_clean_pipeline(t_input *init);
+void	msh_split_clean_command(char **command);
 /* Closing functions. */
 void	msh_init_close_on_error(t_input *init);
 void	msh_handle_sigint_close_on_error(t_input *init);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_loop_memset.c                            :+:      :+:    :+:   */
+/*   minishell_split_cleaner.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/22 14:33:50 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/25 14:47:53 by fporciel         ###   ########.fr       */
+/*   Created: 2024/03/25 14:30:29 by fporciel          #+#    #+#             */
+/*   Updated: 2024/03/25 15:16:53 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,59 +32,40 @@
 
 #include "minishell.h"
 
-static char	**msh_remove_matrix(char **matrix)
+void	msh_split_clean_command(char **command)
 {
 	ssize_t	j;
 
-	if (!matrix)
-		return (NULL);
+	if (!command)
+		return ;
 	j = 0;
-	while (matrix[j])
+	while (command[j])
 		j++;
 	j--;
 	while (j >= 0)
 	{
-		free(matrix[j]);
+		free(command[j]);
 		j--;
 	}
-	return (NULL);
+	free(command);
+	command = NULL;
 }
 
-static char	***msh_remove_pipeline(char ***pipeline)
+void	msh_split_clean_pipeline(t_input *init)
 {
 	ssize_t	j;
 
-	if (!pipeline)
-		return (NULL);
+	if (!init->pipeline)
+		return ;
 	j = 0;
-	while (pipeline[j])
+	while (init->pipeline[j])
 		j++;
 	j--;
 	while (j >= 0)
 	{
-		pipeline[j] = msh_remove_matrix(pipeline[j]);
+		msh_split_clean_command(init->pipeline[init->pipe_count]);
 		j--;
 	}
-	return (NULL);
-}
-
-void	msh_loop_memset(t_input *init)
-{
-	if (init->string)
-		free(init->string);
-	init->string = NULL;
-	init->pipeline = msh_remove_pipeline(init->pipeline);
-	init->pipe_count = 0;
-	init->token_count = 0;
-	init->i = 0;
-	init->open_quote = START;
-	init->quote_state = NORMAL;
-	init->pipe_state = START;
-}
-
-void	msh_loop_clean_all(t_input *init)
-{
-	msh_loop_memset(init);
-	init->envp = msh_remove_matrix(init->envp);
-	free(init);
+	free(init->pipeline);
+	init->pipeline = NULL;
 }
