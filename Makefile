@@ -6,7 +6,7 @@
 #    By: fporciel <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/12 11:38:22 by fporciel          #+#    #+#              #
-#    Updated: 2024/03/28 08:38:54 by fporciel         ###   ########.fr        #
+#    Updated: 2024/03/28 10:19:42 by fporciel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 # MiniShell is a simple shell for Debian GNU/Linux.
@@ -39,7 +39,7 @@ DIR := $(shell pwd)
 DFT := $(DIR)/$(shell basename -s .git $(FTURL))
 HEADER := $(wildcard $(NAME)*.h) $(wildcard $(DFT)/*.h)
 MAIN := $(NAME).c
-SRCS := $(filter-out $(NAME), $(wildcard $(NAME)*.c))
+SRCS := $(filter-out $(MAIN), $(wildcard $(NAME)*.c))
 OBJS := $(patsubst %.c, %.o, $(SRCS))
 LIBFT := $(wildcard $(DFT)/*.a)
 LIBMS := $(DIR)/$(addprefix lib, $(NAME)).a
@@ -58,7 +58,7 @@ LTFLAGS := $(LDFLAGS) -ltsan
 all: $(NAME)
 
 $(NAME): $(MAIN) $(LIBFT) $(LIBMS)
-	$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(MAIN) $(LIBMS) \
+	@$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(MAIN) $(LIBMS) \
 		$(LIBFT) $(LDINCLUDE) $(LDFLAGS) -o $@
 
 $(LIBFT): $(DFT)
@@ -74,8 +74,8 @@ $(OBJS): $(SRCS) $(HEADER)
 	@$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(SRCS) -c
 
 mem: $(MAIN) $(SRCS) $(HEADER) $(LIBFT)
-	@$(CC) $(CSTD) $(CFLAGS) $(AFLAGS) $(INCLUDE) $(HEADER) $(MAIN) $(SRCS) \
-		$(LIBFT) $(LAFLAGS) -o $(NAME)
+	$(CC) $(CSTD) $(CFLAGS) $(AFLAGS) $(INCLUDE) $(HEADER) $(MAIN) $(SRCS) \
+		$(LIBFT) $(filter-out -l$(NAME), $(LAFLAGS)) -o $(NAME)
 
 thread: $(MAIN) $(SRCS) $(HEADER) $(LIBFT)
 	@$(CC) $(CSTD) $(CFLAGS) $(TFLAGS) $(INCLUDE) $(HEADER) $(MAIN) $(SRCS) \
