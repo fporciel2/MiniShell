@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 14:48:11 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/25 15:41:08 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/28 08:23:41 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -56,7 +56,7 @@ void	msh_loop(t_input *init)
 
 	while (42)
 	{
-		printf("EXECUTING TEST!\N");
+		printf("EXECUTING TEST!\n");
 		msh_loop_memset(init);
 		printf("Memset works!\n");
 		init->string = readline("minishell> ");

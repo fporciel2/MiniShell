@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 15:33:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/25 11:17:55 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/28 08:27:23 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -154,7 +154,7 @@
  * so that the command line can wait appropriately for the input continuation
  * and the closing quote, based on the `open_quote` and `quote_state` variables.
  * */
-static void	msh_quote_state(t_input *init, char quote)
+static int	msh_quote_state(t_input *init, char quote)
 {
 	if (quote == 34)
 		init->quote_state = DOUBLE_QUOTE;
@@ -174,6 +174,7 @@ static void	msh_quote_state(t_input *init, char quote)
 	}
 	else
 		init->open_quote = 1;
+	return (init->open_quote);
 }
 
 /*`msh_is_ifs` detects whether the current character is a delimiter. It doesn't
@@ -218,11 +219,11 @@ int	msh_strtok(t_input *init)
 			init->error = msh_quote_state(init, init->string[init->i]);
 		else if (msh_is_ifs(init))
 		{
-			while (msh_is_ifs(init->string[init->i]))
+			while (msh_is_ifs(init))
 				init->i++;
 			init->error = msh_split_token(init);
 		}
-		else if (msh_is_pipe(init->string[init->i]))
+		else if (msh_is_pipe(init))
 			init->error = msh_split_pipeline(init);
 		else
 			init->error = msh_append_char(init);

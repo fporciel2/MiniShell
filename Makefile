@@ -6,7 +6,7 @@
 #    By: fporciel <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/12 11:38:22 by fporciel          #+#    #+#              #
-#    Updated: 2024/03/13 12:27:55 by fporciel         ###   ########.fr        #
+#    Updated: 2024/03/28 08:38:54 by fporciel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 # MiniShell is a simple shell for Debian GNU/Linux.
@@ -41,7 +41,7 @@ HEADER := $(wildcard $(NAME)*.h) $(wildcard $(DFT)/*.h)
 MAIN := $(NAME).c
 SRCS := $(filter-out $(NAME), $(wildcard $(NAME)*.c))
 OBJS := $(patsubst %.c, %.o, $(SRCS))
-LIBFT := $(DFT)/$(wildcard *.a)
+LIBFT := $(wildcard $(DFT)/*.a)
 LIBMS := $(DIR)/$(addprefix lib, $(NAME)).a
 CC := gcc
 CSTD := -std=c17 -pedantic-errors
@@ -50,19 +50,19 @@ AFLAGS := $(CFLAGS) -fsanitize=address -fno-omit-frame-pointer -g
 TFLAGS := $(CFLAGS) -fsanitize=thread -g
 COPT := -O3 -march=native -g
 INCLUDE := $(addprefix -I, $(DIR) $(DFT))
-LDINCLUDE := $(addprefix -L, $(DFT))
-LDFLAGS := -lc -lft -lreadline -lncurses -ltinfo
+LDINCLUDE := $(addprefix -L, $(DIR) $(DFT))
+LDFLAGS := -lc -lreadline -lncurses -ltinfo -lminishell -lft
 LAFLAGS := $(LDFLAGS) -lasan
 LTFLAGS := $(LDFLAGS) -ltsan
 
 all: $(NAME)
 
 $(NAME): $(MAIN) $(LIBFT) $(LIBMS)
-	@$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(MAIN) $(LIBMS) \
+	$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(MAIN) $(LIBMS) \
 		$(LIBFT) $(LDINCLUDE) $(LDFLAGS) -o $@
 
 $(LIBFT): $(DFT)
-	@if [ ! -e $@ ]; then $(MAKE) -C $(DFT) bonus; fi
+	@if [ ! -e $@ ]; then $(MAKE) -C $(DFT); fi
 
 $(DFT):
 	@if [ ! -e $@ ]; then git clone $(FTURL); fi
