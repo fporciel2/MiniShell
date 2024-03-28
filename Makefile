@@ -6,7 +6,7 @@
 #    By: fporciel <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/12 11:38:22 by fporciel          #+#    #+#              #
-#    Updated: 2024/03/28 10:19:42 by fporciel         ###   ########.fr        #
+#    Updated: 2024/03/28 11:40:35 by fporciel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 # MiniShell is a simple shell for Debian GNU/Linux.
@@ -34,14 +34,11 @@
 	autogit destroy
 .DEFAULT_GOAL: all
 NAME := minishell
-FTURL := https://github.com/fporciel2/1_libft.git
 DIR := $(shell pwd)
-DFT := $(DIR)/$(shell basename -s .git $(FTURL))
-HEADER := $(wildcard $(NAME)*.h) $(wildcard $(DFT)/*.h)
+HEADER := $(wildcard $(NAME)*.h)
 MAIN := $(NAME).c
 SRCS := $(filter-out $(MAIN), $(wildcard $(NAME)*.c))
 OBJS := $(patsubst %.c, %.o, $(SRCS))
-LIBFT := $(wildcard $(DFT)/*.a)
 LIBMS := $(DIR)/$(addprefix lib, $(NAME)).a
 CC := gcc
 CSTD := -std=c17 -pedantic-errors
@@ -49,23 +46,17 @@ CFLAGS := -Wall -Wextra -Werror
 AFLAGS := $(CFLAGS) -fsanitize=address -fno-omit-frame-pointer -g
 TFLAGS := $(CFLAGS) -fsanitize=thread -g
 COPT := -O3 -march=native -g
-INCLUDE := $(addprefix -I, $(DIR) $(DFT))
-LDINCLUDE := $(addprefix -L, $(DIR) $(DFT))
-LDFLAGS := -lc -lreadline -lncurses -ltinfo -lminishell -lft
+INCLUDE := $(addprefix -I, $(DIR))
+LDINCLUDE := $(addprefix -L, $(DIR))
+LDFLAGS := -lc -lreadline -lncurses -ltinfo -lminishell
 LAFLAGS := $(LDFLAGS) -lasan
 LTFLAGS := $(LDFLAGS) -ltsan
 
 all: $(NAME)
 
-$(NAME): $(MAIN) $(LIBFT) $(LIBMS)
+$(NAME): $(MAIN) $(LIBMS)
 	@$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(MAIN) $(LIBMS) \
-		$(LIBFT) $(LDINCLUDE) $(LDFLAGS) -o $@
-
-$(LIBFT): $(DFT)
-	@if [ ! -e $@ ]; then $(MAKE) -C $(DFT); fi
-
-$(DFT):
-	@if [ ! -e $@ ]; then git clone $(FTURL); fi
+		$(LDINCLUDE) $(LDFLAGS) -o $@
 
 $(LIBMS): $(OBJS)
 	@ar rcs $@ $(OBJS) $(HEADER)
@@ -74,18 +65,17 @@ $(OBJS): $(SRCS) $(HEADER)
 	@$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(SRCS) -c
 
 mem: $(MAIN) $(SRCS) $(HEADER) $(LIBFT)
-	$(CC) $(CSTD) $(CFLAGS) $(AFLAGS) $(INCLUDE) $(HEADER) $(MAIN) $(SRCS) \
+	@$(CC) $(CSTD) $(CFLAGS) $(AFLAGS) $(INCLUDE) $(HEADER) $(MAIN) $(SRCS) \
 		$(LIBFT) $(filter-out -l$(NAME), $(LAFLAGS)) -o $(NAME)
 
 thread: $(MAIN) $(SRCS) $(HEADER) $(LIBFT)
 	@$(CC) $(CSTD) $(CFLAGS) $(TFLAGS) $(INCLUDE) $(HEADER) $(MAIN) $(SRCS) \
-		$(LIBFT) $(LTFLAGS) -o $(NAME)
+		$(LIBFT) $(filter-out -l$(NAME), $(LTFLAGS)) -o $(NAME)
 
 clean:
 	@rm -f $(OBJS)
 	@rm -f $(LIBMS)
 	@rm -f $(NAME).h.gch
-	@if [ -e $(DFT) ]; then $(MAKE) -C $(DFT) clean; fi
 
 fclean: clean
 	@rm -f $(NAME)
@@ -96,9 +86,6 @@ remem: fclean mem
 
 rethread: fclean thread
 
-destroy: fclean
-	@rm -rfd $(DFT)
-
 memcheck: re
 	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
 		--verbose ./$(NAME)
@@ -106,7 +93,7 @@ memcheck: re
 helgrind: re
 	@valgrind --tool=helgrind ./$(NAME)
 
-autogit: destroy
+autogit: fclean
 	@git status
 	@echo "\nIs there anything to remove? [y/n]"
 	@read answer; if [ $$answer = "y" ]; \
