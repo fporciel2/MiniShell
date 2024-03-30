@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 16:15:05 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 16:42:10 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 17:02:34 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -31,6 +31,58 @@
  */
 
 #include "minishell.h"
+
+static char	***msh_start_tokenization(t_input *init)
+{
+	init->pipeline = (char ***)malloc(sizeof(char **) * 2);
+	if (!init->pipeline)
+		return (NULL);
+	init->pipeline[0] = (char **)malloc(sizeof(char *) * 2);
+	if (!init->pipeline[0])
+		return (msh_clean_pipeline(init->pipeline));
+	init->pipeline[0][0] = (char *)malloc(sizeof(char) * 2);
+	if (!init->pipeline[0][0])
+		return (msh_clean_pipeline(init->pipeline));
+	init->pipeline[0][0][0] = init->line[init->i];
+	init->pipeline[0][0][1] = 0;
+	init->pipeline[0][1] = NULL;
+	init->pipeline[1] = NULL;
+	return (init->pipeline);
+}
+
+static char	*msh_tkcpy(char *dest, char *src, ssize_t *len)
+{
+	*len = 0;
+	while (src[*len])
+	{
+		dest[*len] = src[*len];
+		(*len)++;
+	}
+	return (dest);
+}
+
+char	***msh_append_char(t_input *init)
+{
+	ssize_t	pipelen;
+	ssize_t	cmdlen;
+	ssize_t	strlen;
+	char	*new;
+
+	if (init->i == 0)
+		return (msh_start_tokenization(init));
+	pipelen = msh_pipelen(init->pipeline);
+	cmdlen = msh_cmdlen(init->pipeline[pipelen]);
+	strlen = msh_strlen(init->pipeline[pipelen][cmdlen]);
+	new = (char *)malloc(sizeof(char) * (strlen + 2));
+	if (!new)
+		return (msh_clean_pipeline(init->pipeline));
+	new = msh_tkcpy(new, init->pipeline[pipelen][cmdlen], &strlen);
+	new[strlen] = init->line[init->i];
+	new[strlen + 1] = 0;
+	free(init->pipeline[pipelen][cmdlen]);
+	init->pipeline[pipelen][cmdlen] = new;
+	return (init->pipeline);
+}
 
 char	***msh_append_token(t_input *init)
 {
