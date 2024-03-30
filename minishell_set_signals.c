@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 08:57:13 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 09:05:20 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 09:09:09 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* <one line to give the program's name and a brief idea
@@ -56,6 +56,8 @@ void	msh_handle_sigquit(int sig)
 
 void	msh_initialize(t_input *init)
 {
+	init->pipeline = NULL;
+	init->line = NULL;
 }
 
 void	msh_set_signals(t_input *init)
