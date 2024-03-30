@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 16:33:46 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 17:31:52 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -126,7 +126,7 @@ typedef struct s_input
 	char	*line;
 	char	*prompt;
 	ssize_t	i;
-	int		quotation;
+	int		errquote;
 	int		heredoc;
 }			t_input;
 
