@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 16:15:05 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 17:54:25 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 17:57:28 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -47,7 +47,6 @@ static char	***msh_start_tokenization(t_input *init)
 	init->pipeline[0][0][1] = 0;
 	init->pipeline[0][1] = NULL;
 	init->pipeline[1] = NULL;
-	printf("%s\n", init->pipeline[0][0]);
 	return (init->pipeline);
 }
 
@@ -82,7 +81,6 @@ char	***msh_append_char(t_input *init)
 	new[strlen + 1] = 0;
 	free(init->pipeline[pipelen - 1][cmdlen - 1]);
 	init->pipeline[pipelen - 1][cmdlen - 1] = new;
-	printf("%s\n", init->pipeline[pipelen - 1][cmdlen - 1]);
 	return (init->pipeline);
 }
 
@@ -95,9 +93,7 @@ char	***msh_append_token(t_input *init)
 	if (init->i == 0)
 		return (msh_start_tokenization(init));
 	pipelen = msh_pipelen(init->pipeline);
-	printf("pipelen: %ld\n", pipelen);
 	cmdlen = msh_cmdlen(init->pipeline[pipelen - 1]);
-	printf("cmdlen: %ld\n", cmdlen);
 	new = (char **)malloc(sizeof(char *) * (cmdlen + 2));
 	if (!new)
 		return (msh_clean_pipeline(init->pipeline));
@@ -105,16 +101,13 @@ char	***msh_append_token(t_input *init)
 	while (init->pipeline[pipelen - 1][cmdlen])
 	{
 		new[cmdlen] = init->pipeline[pipelen - 1][cmdlen];
-		printf("new[%ld]: %s\n", cmdlen, new[cmdlen]);
 		cmdlen++;
 	}
 	new[cmdlen] = msh_new_token(init);
 	if (!new[cmdlen])
 		return (msh_clean_pipeline(init->pipeline));
-	printf("new[%ld]: %s\n", cmdlen, new[cmdlen]);
 	new[cmdlen + 1] = NULL;
 	free(init->pipeline[pipelen - 1]);
-	printf("%p\n", (void *)init->pipeline[pipelen]);
 	init->pipeline[pipelen - 1] = new;
 	return (init->pipeline);
 }
