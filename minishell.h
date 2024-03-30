@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 06:56:07 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 07:04:43 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -118,9 +118,10 @@
 
 typedef struct s_input
 {
-	char	**envp;
-	char	*string;
 	char	***pipeline;
+	char	**envp;
+	char	*line;
+	char	*program_name;
 }			t_input;
 
 /*Initialization of input functions.*/

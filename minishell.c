@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 06:17:49 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 07:02:45 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 07:12:01 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -38,10 +38,14 @@ int	main(int argc, char **argv, char **envp)
 	size_t	i;
 
 	if (argc != 1)
-		return (perror("Error"), errno);
+	{
+		errno = write(2, "Do not use arguments if you want to live!\n", 42);
+		return (errno);
+	}
 	init = (t_input *)malloc(sizeof(t_input));
 	if (!init)
 		return (perror("Error"), errno);
+	init->program_name = argv[0];
 	if (!msh_get_envp(envp, init))
 		return (free(init), perror("Error"), errno);
 	if (!init->envp)
