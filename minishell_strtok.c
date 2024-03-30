@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 11:19:00 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 16:16:16 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 18:01:28 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -102,6 +102,21 @@ int	msh_strtok(t_input	*init)
 		if (!init->pipeline)
 			return (strerror(errno), 0);
 		init->i++;
+	}
+	printf("ERRQUOTE: %d\n", init->errquote);
+	printf("HEREDOC: %d\n\n", init->heredoc);
+	ssize_t	i = 0;
+	ssize_t	j = 0;
+	while (init->pipeline[i])
+	{
+		printf("New command: \n");
+		j = 0;
+		while (init->pipeline[i][j])
+		{
+			printf("Token: %s\n", init->pipeline[i][j]);
+			j++;
+		}
+		i++;
 	}
 	return (1);
 }
