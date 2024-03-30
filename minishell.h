@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/28 08:23:16 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 06:48:18 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -96,12 +96,6 @@
 # define MINISHELL_H
 # define _DEFAULT_SOURCE
 # define _POSIX_C_SOURCE
-# define START 0
-# define NO_ERROR 0
-# define NORMAL 0
-# define SINGLE_QUOTE 1
-# define DOUBLE_QUOTE 2
-# define OPEN_PIPE 1
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -127,37 +121,18 @@ typedef struct s_input
 	char	**envp;
 	char	*string;
 	char	***pipeline;
-	size_t	pipe_count;
-	size_t	token_count;
-	size_t	i;
-	int		open_quote;
-	int		quote_state;
-	int		pipe_state;
-	int		error;
 }			t_input;
 
-/* Initialization functions. */
-int		msh_first_get_env(char **envp, char ***envs);
-void	msh_init(char **envp, t_input *init);
-void	msh_handle_sigint(int sig);
-void	msh_handle_igquit(int sig);
-void	msh_initialize(t_input *init);
-/* Main loop's functions. */
-void	msh_loop(t_input *init);
-/* Tokenizer/Lexicon-analyzer's functions.*/
-int		msh_strtok(t_input *init);
-int		msh_split_token(t_input *init);
-int		msh_split_pipeline(t_input *init);
-int		msh_append_char(t_input *init);
-/* Cleaning functions. */
-void	msh_loop_clean_all(t_input *init);
-void	msh_loop_memset(t_input *init);
-void	msh_split_clean_pipeline(t_input *init);
-void	msh_split_clean_command(char **command);
-/* Closing functions. */
-void	msh_init_close_on_error(t_input *init);
-void	msh_handle_sigint_close_on_error(const t_input *init);
-/* Utils functions. */
-char	*msh_strdup(char *env);
+/*Initialization of input functions.*/
+int	msh_get_envp(char **envp, t_input *init);
+/*Utils functions.*/
+ssize_t	msh_pipelen(char ***pipeline);
+ssize_t	msh_cmdlen(char **cmd);
+ssize_t	msh_strlen(char *str);
+char	*msh_strdup(char *str);
+/*Cleaning functions.*/
+void	msh_clean_pipeline(char ***pipeline);
+void	msh_clean_cmd(char **cmd);
+void	msh_clean_str(char *str);
 
 #endif
