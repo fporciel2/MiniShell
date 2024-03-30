@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 08:57:13 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 09:09:09 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 09:42:30 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* <one line to give the program's name and a brief idea
@@ -42,8 +42,8 @@ static void	msh_close_on_error(t_input *init)
 
 void	msh_handle_sigint(int sig)
 {
+	sig = write(STDOUT_FILENO, "\n", 1);
 	(void)sig;
-	write(STDOUT_FILENO, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
