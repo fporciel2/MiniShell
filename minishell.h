@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 15:42:26 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 16:33:46 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -137,6 +137,9 @@ void	msh_initialize(t_input *init);
 void	msh_loop(t_input *init);
 /*Lexicon analysis.*/
 int		msh_strtok(t_input *init);
+char	***msh_append_command(t_input *init);
+char	***msh_append_token(t_input *init);
+char	***msh_append_char(t_input *init);
 /*Signals setting functions.*/
 void	msh_set_signals(t_input *init);
 void	msh_handle_sigint(int sig);
@@ -149,5 +152,7 @@ char	*msh_strdup(char *str);
 char	***msh_clean_pipeline(char ***pipeline);
 char	**msh_clean_cmd(char **cmd);
 char	*msh_clean_str(char *str);
+char	**msh_new_command(t_input *init);
+char	*msh_new_token(t_input *init);
 
 #endif
