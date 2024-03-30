@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_loop.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/30 06:17:49 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 09:35:44 by fporciel         ###   ########.fr       */
+/*   Created: 2024/03/30 09:25:24 by fporciel          #+#    #+#             */
+/*   Updated: 2024/03/30 09:34:34 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,23 +32,23 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+void	msh_loop(t_input *init)
 {
-	t_input	*init;
-	size_t	i;
-
-	if (argc != 1)
+	while (42)
 	{
-		errno = write(2, "Do not use arguments if you want to live!\n", 42);
-		return (errno);
+		msh_memset(init);
+		init->line = readline(init->prompt);
+		if (!init->line)
+		{
+			msh_free_init(init);
+			break ;
+		}
+		else if (*init->line)
+			add_history(init->line);
+		else
+		{
+			free(init->line);
+			continue ;
+		}
 	}
-	init = (t_input *)malloc(sizeof(t_input));
-	if (!init)
-		return (perror("Error"), errno);
-	init->prompt = argv[0];
-	if (!msh_get_envp(envp, init))
-		return (free(init), perror("Error"), errno);
-	msh_set_signals(init);
-	msh_loop(init);
-	return (EXIT_SUCCESS);
 }
