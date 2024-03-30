@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_set_signals.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/30 06:17:49 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 08:56:44 by fporciel         ###   ########.fr       */
+/*   Created: 2024/03/30 08:57:13 by fporciel          #+#    #+#             */
+/*   Updated: 2024/03/30 09:05:20 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/* `MiniShell` is a simple shell for Debian GNU/Linux.
- * Copyright (C) 2024 Federico Porciello
+/* <one line to give the program's name and a brief idea
+ * of what it does.>
+ * Copyright (C) <year>  <name of author>
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,26 +28,52 @@
  * 
  * For more information on how to contact me by electronic and paper mail
  * please see:
- * https://github.com/fporciel2/MiniShell
+ * <your contact information here>
  */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+static void	msh_close_on_error(t_input *init)
 {
-	t_input	*init;
-	size_t	i;
+	init->envp = msh_clean_cmd(init->envp);
+	free(init);
+	exit(EXIT_FAILURE);
+}
 
-	if (argc != 1)
-	{
-		errno = write(2, "Do not use arguments if you want to live!\n", 42);
-		return (errno);
-	}
-	init = (t_input *)malloc(sizeof(t_input));
-	if (!init)
-		return (perror("Error"), errno);
-	init->program_name = argv[0];
-	if (!msh_get_envp(envp, init))
-		return (free(init), perror("Error"), errno);
-	msh_set_signals(init);
+void	msh_handle_sigint(int sig)
+{
+	(void)sig;
+	write(STDOUT_FILENO, "\n", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+void	msh_handle_sigquit(int sig)
+{
+	(void)sig;
+}
+
+void	msh_initialize(t_input *init)
+{
+}
+
+void	msh_set_signals(t_input *init)
+{
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+
+	msh_initialize(init);
+	sa_int.sa_handler = msh_handle_sigint;
+	if (sigemptyset(&sa_int.sa_mask) < 0)
+		msh_close_on_error(init);
+	sa_int.sa_flags = 0;
+	if (sigaction(SIGINT, &sa_int, NULL) < 0)
+		msh_close_on_error(init);
+	sa_quit.sa_handler = msh_handle_sigquit;
+	if (sigemptyset(&sa_quit.sa_mask) < 0)
+		msh_close_on_error(init);
+	sa_quit.sa_flags = 0;
+	if (sigaction(SIGQUIT, &sa_quit, NULL) < 0)
+		msh_close_on_error(init);
 }

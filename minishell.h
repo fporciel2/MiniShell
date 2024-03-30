@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 07:04:43 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 08:39:26 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -131,7 +131,6 @@ ssize_t	msh_pipelen(char ***pipeline);
 ssize_t	msh_cmdlen(char **cmd);
 ssize_t	msh_strlen(char *str);
 char	*msh_strdup(char *str);
-/*Cleaning functions.*/
 char	***msh_clean_pipeline(char ***pipeline);
 char	**msh_clean_cmd(char **cmd);
 char	*msh_clean_str(char *str);
