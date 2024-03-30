@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 08:57:13 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 09:42:30 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 10:05:48 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* <one line to give the program's name and a brief idea
@@ -72,7 +72,7 @@ void	msh_set_signals(t_input *init)
 	sa_int.sa_flags = 0;
 	if (sigaction(SIGINT, &sa_int, NULL) < 0)
 		msh_close_on_error(init);
-	sa_quit.sa_handler = msh_handle_sigquit;
+	sa_quit.sa_handler = SIG_IGN;
 	if (sigemptyset(&sa_quit.sa_mask) < 0)
 		msh_close_on_error(init);
 	sa_quit.sa_flags = 0;
