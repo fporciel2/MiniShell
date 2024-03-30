@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 09:36:49 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 11:26:51 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -122,6 +122,8 @@ typedef struct s_input
 	char	**envp;
 	char	*line;
 	char	*prompt;
+	ssize_t	i;
+	int		quotation;
 }			t_input;
 
 /*Initialization of input functions.*/
@@ -129,6 +131,8 @@ int		msh_get_envp(char **envp, t_input *init);
 void	msh_initialize(t_input *init);
 /*Loop functions.*/
 void	msh_loop(t_input *init);
+/*Command parsing functions.*/
+int		msh_strtok(t_input *init);
 /*Signals setting functions.*/
 void	msh_set_signals(t_input *init);
 void	msh_handle_sigint(int sig);

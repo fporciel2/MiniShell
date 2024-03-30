@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_loop.c                                   :+:      :+:    :+:   */
+/*   minishell_strtok.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/30 09:25:24 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 10:21:14 by fporciel         ###   ########.fr       */
+/*   Created: 2024/03/30 11:19:00 by fporciel          #+#    #+#             */
+/*   Updated: 2024/03/30 11:50:06 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,40 +32,27 @@
 
 #include "minishell.h"
 
-static void	msh_memset(t_input *init)
+int	msh_strtok(t_input	*init)
 {
-	init->pipeline = msh_clean_pipeline(init->pipeline);
-	init->line = msh_clean_str(init->line);
-}
+	ssize_t	j;
 
-static void	msh_free_init(t_input *init)
-{
-	init->envp = msh_clean_cmd(init->envp);
-	init->pipeline = msh_clean_pipeline(init->pipeline);
-	init->line = msh_clean_str(init->line);
-	init->prompt = NULL;
-	free(init);
-}
-
-void	msh_loop(t_input *init)
-{
-	while (42)
+	init->i = 0;
+	init->quotation = 0;
+	while (init->line[i])
 	{
-		msh_memset(init);
-		init->line = readline("MiniShell> ");
-		if (!init->line)
-		{
-			msh_free_init(init);
-			break ;
-		}
-		else if (*init->line)
-			add_history(init->line);
+		if ((init->line[i] == 34) || (init->line[i] == 39))
+			init->quotation = msh_quoting(init);
+		else if ((init->line[i] == 60) || (init->line[i] == 62))
+			init->heredoc = msh_redirecting(init);
+		else if ((init->line[i] == 9) || (init->line[i] == 10)
+				|| (init->line[i] == 32))
+			init->pipeline = msh_append_token(init);
+		else if (init->line[i] == 124)
+			init->pipeline = msh_append_command(init);
 		else
-			continue ;
-		if (!msh_strtok(init))
-		{
-			msh_free_init(init);
-			break ;
-		}
+			init->pipeline = msh_append_char(init);
+		if (!init->pipeline)
+			return ((int)write(2, "Error\n", 6));
+		init->i++;
 	}
 }
