@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 06:48:18 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 06:56:07 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -124,15 +124,15 @@ typedef struct s_input
 }			t_input;
 
 /*Initialization of input functions.*/
-int	msh_get_envp(char **envp, t_input *init);
+int		msh_get_envp(char **envp, t_input *init);
 /*Utils functions.*/
 ssize_t	msh_pipelen(char ***pipeline);
 ssize_t	msh_cmdlen(char **cmd);
 ssize_t	msh_strlen(char *str);
 char	*msh_strdup(char *str);
 /*Cleaning functions.*/
-void	msh_clean_pipeline(char ***pipeline);
-void	msh_clean_cmd(char **cmd);
-void	msh_clean_str(char *str);
+char	***msh_clean_pipeline(char ***pipeline);
+char	**msh_clean_cmd(char **cmd);
+char	*msh_clean_str(char *str);
 
 #endif
