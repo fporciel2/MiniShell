@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 11:19:00 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 11:54:57 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/30 15:58:04 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,20 +32,70 @@
 
 #include "minishell.h"
 
+static void	msh_slide_delimiters(t_input *init)
+{
+	while ((init->line[init->i] == 9) || (init->line[init->i] == 10)
+				|| (init->line[init->i] == 32))
+		init->i++;
+}
+
+static int	msh_redirecting(t_input *init)
+{
+	char	redir;
+
+	redir = init->line[init->i];
+	init->pipeline = msh_append_token(init);
+	if (!init->pipeline)
+		return (strerror(errno), 0);
+	init->i++;
+	if (init->line[init->i] == redir)
+		init->pipeline = msh_append_char(init);
+	if (!init->pipeline)
+		return (strerror(errno), 0);
+	if ((redir == 60) && (init->line[init->i] == 60))
+		return (HEREDOC);
+	return (0);
+}
+
+static int	msh_quoting(t_input *init)
+{
+	char	quote;
+
+	quote = init->line[init->i];
+	init->pipeline = msh_append_token(init);
+	if (!init->pipeline)
+		return (strerror(errno), 0);
+	init->i++;
+	while (init->line[init->i] && (init->line[init->i] != quote))
+	{
+		init->pipeline = msh_append_char(init);
+		if (!init->pipeline)
+			return (strerror(errno), 0);
+		init->i++;
+	}
+	if (!init->line[init->i])
+		return (1);
+	return (0);
+}
+
 int	msh_strtok(t_input	*init)
 {
 	init->i = 0;
-	init->quotation = 0;
-	while (init->line[i])
+	init->errquote = 0;
+	init->heredoc = 0;
+	while (init->line[init->i])
 	{
-		if ((init->line[i] == 34) || (init->line[i] == 39))
-			init->quotation = msh_quoting(init);
-		else if ((init->line[i] == 60) || (init->line[i] == 62))
+		if ((init->line[init->i] == 34) || (init->line[init->i] == 39))
+			init->errquote = msh_quoting(init);
+		else if ((init->line[init->i] == 60) || (init->line[init->i] == 62))
 			init->heredoc = msh_redirecting(init);
-		else if ((init->line[i] == 9) || (init->line[i] == 10)
-				|| (init->line[i] == 32))
+		else if ((init->line[init->i] == 9) || (init->line[init->i] == 10)
+				|| (init->line[init->i] == 32))
+		{
+			msh_slide_delimiters(init);
 			init->pipeline = msh_append_token(init);
-		else if (init->line[i] == 124)
+		}
+		else if (init->line[init->i] == 124)
 			init->pipeline = msh_append_command(init);
 		else
 			init->pipeline = msh_append_char(init);
