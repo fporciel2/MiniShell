@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 11:19:00 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/31 07:58:25 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/31 08:48:01 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,7 +32,7 @@
 
 #include "minishell.h"
 
-static int	msh_slide_delimiters(t_input *init)
+static void	msh_slide_delimiters(t_input *init)
 {
 	if (init->i == 0)
 		init->space_flag = 1;
@@ -41,7 +41,7 @@ static int	msh_slide_delimiters(t_input *init)
 	while ((init->line[init->i] == 9) || (init->line[init->i] == 10)
 				|| (init->line[init->i] == 32))
 		init->i++;
-	return (1);
+	init->i--;
 }
 
 static int	msh_redirecting(t_input *init)
@@ -98,9 +98,9 @@ int	msh_strtok(t_input	*init)
 			init->errquote = msh_quoting(init);
 		else if ((init->line[init->i] == 60) || (init->line[init->i] == 62))
 			init->heredoc = msh_redirecting(init);
-		else if (((init->line[init->i] == 9) || (init->line[init->i] == 10)
-				|| (init->line[init->i] == 32)) && msh_slide_delimiters(init))
-			init->pipeline = msh_append_token(init);
+		else if ((init->line[init->i] == 9) || (init->line[init->i] == 10)
+				|| (init->line[init->i] == 32))
+			msh_slide_delimiters(init);
 		else if (init->line[init->i] == 124)
 			init->pipeline = msh_append_command(init);
 		else
