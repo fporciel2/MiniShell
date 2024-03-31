@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 11:19:00 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/31 09:18:40 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/31 09:22:43 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -54,11 +54,15 @@ static int	msh_redirecting(t_input *init)
 		return (strerror(errno), 0);
 	init->i++;
 	if (init->line[init->i] == redir)
+	{
 		init->pipeline = msh_append_char(init);
-	if (!init->pipeline)
-		return (strerror(errno), 0);
-	if ((redir == 60) && (init->line[init->i] == 60))
-		return (HEREDOC);
+		if (!init->pipeline)
+			return (strerror(errno), 0);
+		if ((redir == 60) && (init->line[init->i] == 60))
+			return (HEREDOC);
+	}
+	else
+		init->i--;
 	return (0);
 }
 
