@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 16:15:05 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 17:57:28 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/31 07:49:01 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -68,7 +68,7 @@ char	***msh_append_char(t_input *init)
 	ssize_t	strlen;
 	char	*new;
 
-	if (init->i == 0)
+	if ((init->i == 0) || (init->space_flag == 1))
 		return (msh_start_tokenization(init));
 	pipelen = msh_pipelen(init->pipeline);
 	cmdlen = msh_cmdlen(init->pipeline[pipelen - 1]);
@@ -90,7 +90,7 @@ char	***msh_append_token(t_input *init)
 	ssize_t	cmdlen;
 	char	**new;
 
-	if (init->i == 0)
+	if ((init->i == 0) || (init->space_flag == 1))
 		return (msh_start_tokenization(init));
 	pipelen = msh_pipelen(init->pipeline);
 	cmdlen = msh_cmdlen(init->pipeline[pipelen - 1]);
@@ -117,7 +117,7 @@ char	***msh_append_command(t_input *init)
 	ssize_t	pipelen;
 	char	***new;
 
-	if (init->i == 0)
+	if ((init->i == 0) || (init->space_flag == 1))
 		return (msh_start_tokenization(init));
 	pipelen = msh_pipelen(init->pipeline);
 	new = (char ***)malloc(sizeof(char **) * (pipelen + 2));

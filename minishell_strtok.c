@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 11:19:00 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 18:01:28 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/03/31 07:58:25 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,11 +32,16 @@
 
 #include "minishell.h"
 
-static void	msh_slide_delimiters(t_input *init)
+static int	msh_slide_delimiters(t_input *init)
 {
+	if (init->i == 0)
+		init->space_flag = 1;
+	else
+		init->space_flag = 0;
 	while ((init->line[init->i] == 9) || (init->line[init->i] == 10)
 				|| (init->line[init->i] == 32))
 		init->i++;
+	return (1);
 }
 
 static int	msh_redirecting(t_input *init)
@@ -75,6 +80,10 @@ static int	msh_quoting(t_input *init)
 	}
 	if (!init->line[init->i])
 		return (1);
+	else
+		init->pipeline = msh_append_char(init);
+	if (!init->pipeline)
+		return (strerror(errno), 0);
 	return (0);
 }
 
@@ -89,19 +98,17 @@ int	msh_strtok(t_input	*init)
 			init->errquote = msh_quoting(init);
 		else if ((init->line[init->i] == 60) || (init->line[init->i] == 62))
 			init->heredoc = msh_redirecting(init);
-		else if ((init->line[init->i] == 9) || (init->line[init->i] == 10)
-				|| (init->line[init->i] == 32))
-		{
-			msh_slide_delimiters(init);
+		else if (((init->line[init->i] == 9) || (init->line[init->i] == 10)
+				|| (init->line[init->i] == 32)) && msh_slide_delimiters(init))
 			init->pipeline = msh_append_token(init);
-		}
 		else if (init->line[init->i] == 124)
 			init->pipeline = msh_append_command(init);
 		else
 			init->pipeline = msh_append_char(init);
 		if (!init->pipeline)
 			return (strerror(errno), 0);
-		init->i++;
+		if (init->line[init->i])
+			init->i++;
 	}
 	printf("ERRQUOTE: %d\n", init->errquote);
 	printf("HEREDOC: %d\n\n", init->heredoc);
