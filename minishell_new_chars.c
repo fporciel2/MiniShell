@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 17:24:18 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/30 17:31:12 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/01 12:56:50 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -31,6 +31,16 @@
  */
 
 #include "minishell.h"
+
+void	msh_set_pipe_syntax(t_input *init)
+{
+	if (init->line[init->i + 1] == 0)
+		init->pipe = PIPE;
+	else
+		init->pipe = 1;
+	if (init->heredoc == HEREDOC)
+		init->heredoc = PIPE_HEREDOC;
+}
 
 char	*msh_new_token(t_input *init)
 {

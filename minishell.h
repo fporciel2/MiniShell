@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/31 07:47:53 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/01 12:53:57 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -128,6 +128,7 @@ typedef struct s_input
 	ssize_t	i;
 	int		errquote;
 	int		heredoc;
+	int		pipe;
 	int		space_flag;
 }			t_input;
 
@@ -155,5 +156,6 @@ char	**msh_clean_cmd(char **cmd);
 char	*msh_clean_str(char *str);
 char	**msh_new_command(t_input *init);
 char	*msh_new_token(t_input *init);
+void	msh_set_pipe_syntax(t_input *init);
 
 #endif

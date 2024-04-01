@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 11:19:00 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/01 12:21:33 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/01 12:49:45 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -58,8 +58,10 @@ static int	msh_redirecting(t_input *init)
 		init->pipeline = msh_append_char(init);
 		if (!init->pipeline)
 			return (strerror(errno), 0);
-		if ((redir == 60) && (init->line[init->i] == 60))
+		if ((redir == 60) && (init->line[init->i] == 60) && !init->pipe)
 			return (HEREDOC);
+		else if ((redir == 60) && (init->line[init->i] == 60) && init->pipe)
+			return (PIPE_HEREDOC);
 	}
 	else
 		init->i--;
@@ -98,6 +100,7 @@ int	msh_strtok(t_input	*init)
 	init->space_flag = 0;
 	init->errquote = 0;
 	init->heredoc = 0;
+	init->pipe = 0;
 	while (init->line[init->i])
 	{
 		if ((init->line[init->i] == 34) || (init->line[init->i] == 39))
@@ -117,19 +120,13 @@ int	msh_strtok(t_input	*init)
 			init->i++;
 	}
 	printf("ERRQUOTE: %d\n", init->errquote);
-	printf("HEREDOC: %d\n\n", init->heredoc);
-	ssize_t	i = 0;
-	ssize_t	j = 0;
-	while (init->pipeline[i])
-	{
-		printf("New command: \n");
-		j = 0;
-		while (init->pipeline[i][j])
-		{
-			printf("Token: %s\n", init->pipeline[i][j]);
-			j++;
-		}
-		i++;
-	}
+	if (init->heredoc == HEREDOC)
+		printf("HEREDOC: %d\n", init->heredoc);
+	else if (init->heredoc == PIPE_HEREDOC)
+		printf("PIPE_HEREDOC: %d\n", init->heredoc);
+	if (init->pipe == 1)
+		printf("NORMAL PIPES: %d\n", init->pipe);
+	else if (init->pipe == PIPE)
+		printf("UNCLOSED PIPE: %d\n", init->pipe);
 	return (1);
 }
