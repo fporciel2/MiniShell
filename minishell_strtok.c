@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 11:19:00 by fporciel          #+#    #+#             */
-/*   Updated: 2024/03/31 09:22:43 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/01 12:21:33 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -95,6 +95,7 @@ static int	msh_quoting(t_input *init)
 int	msh_strtok(t_input	*init)
 {
 	init->i = 0;
+	init->space_flag = 0;
 	init->errquote = 0;
 	init->heredoc = 0;
 	while (init->line[init->i])
@@ -110,7 +111,7 @@ int	msh_strtok(t_input	*init)
 			init->pipeline = msh_append_command(init);
 		else
 			init->pipeline = msh_append_char(init);
-		if (!init->pipeline)
+		if (!init->pipeline && !init->space_flag)
 			return (strerror(errno), 0);
 		if (init->line[init->i])
 			init->i++;
