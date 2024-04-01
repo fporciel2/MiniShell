@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 11:19:00 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/01 13:01:42 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/01 13:02:52 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -39,7 +39,7 @@ static void	msh_slide_delimiters(t_input *init)
 	else
 		init->space_flag = 0;
 	while ((init->line[init->i] == 9) || (init->line[init->i] == 10)
-				|| (init->line[init->i] == 32))
+		|| (init->line[init->i] == 32))
 		init->i++;
 	init->i--;
 }
@@ -108,7 +108,7 @@ int	msh_strtok(t_input	*init)
 		else if ((init->line[init->i] == 60) || (init->line[init->i] == 62))
 			init->heredoc = msh_redirecting(init);
 		else if ((init->line[init->i] == 9) || (init->line[init->i] == 10)
-				|| (init->line[init->i] == 32))
+			|| (init->line[init->i] == 32))
 			msh_slide_delimiters(init);
 		else if (init->line[init->i] == 124)
 			init->pipeline = msh_append_command(init);
