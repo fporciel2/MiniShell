@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/02 15:13:07 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/02 15:58:09 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -53,6 +53,10 @@
 
 #include "minishell.h"
 
+/*static int	msh_quote_removal(t_input *init)
+{
+}
+*/
 static t_cmd	*msh_lastcmd(t_input *init)
 {
 	init->cmds[init->i].cmd_name = NULL;
@@ -73,8 +77,8 @@ static t_cmd	*msh_create_cmds(t_input *init)
 		else
 			init->cmds[init->i].cmd_argv = NULL;
 		init->cmds[init->i].cmd_envp = init->envp;
-		init->cmd_argc = (int)msh_cmdlen(init->pipeline[init->i]);
-		init->cmd_id = init->j;
+		init->cmds[init->i].cmd_argc = (int)msh_cmdlen(init->pipeline[init->i]);
+		init->cmds[init->i].cmd_id = init->j;
 		init->i++;
 		init->j++;
 	}
@@ -84,7 +88,10 @@ static t_cmd	*msh_create_cmds(t_input *init)
 int	msh_tokcmd(t_input *init)
 {
 	if (init->errquote)
-		return (write(2, ERRQUOTE, 42), 0);
+	{
+		init->i = write(2, ERRQUOTE, 42);
+		return (0);
+	}
 	init->i = 0;
 	init->j = 1;
 	init->cmds = (t_cmd *)malloc(sizeof(t_cmd)
@@ -92,4 +99,22 @@ int	msh_tokcmd(t_input *init)
 	if (!init->cmds)
 		return (strerror(errno), 0);
 	init->cmds = msh_create_cmds(init);
+	ssize_t	n = 0;
+	ssize_t	k = 0;
+	while (init->cmds[n].cmd_id)
+	{
+		k = write(1, "\nCOMMAND\n", 9);
+		k = printf("%s\n", init->cmds[n].cmd_name);
+		k = 0;
+		while (init->cmds[n].cmd_argv && init->cmds[n].cmd_argv[k])
+		{
+			printf("%s\n", init->cmds[n].cmd_argv[k]);
+			k++;
+		}
+		n++;
+	}
+	/*if (!msh_quote_removal(init))
+		return (strerror(errno), free(init->cmds), 0);*/
+	init->cmds = msh_clean_cmds(init->cmds);
+	return (0);
 }

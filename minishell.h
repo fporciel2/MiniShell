@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/02 13:01:29 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/02 15:33:43 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -129,7 +129,8 @@ typedef struct s_cmd
 	int		cmd_pipe;
 	int		cmd_heredoc;
 	int		cmd_pipe_heredoc;
-	int		cmd_pipe_fd[2];
+	int		cmd_pipe_fd_input;
+	int		cmd_pipe_fd_output;
 	ssize_t	cmd_id;
 }			t_cmd;
 
