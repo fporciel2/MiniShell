@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/01 15:20:14 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/02 10:39:06 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -119,18 +119,32 @@
 # include <curses.h>
 # include <term.h>
 
+typedef struct s_cmd
+{
+	char	*cmd_name;
+	char	**cmd_argv;
+	char	**cmd_envp;
+	int		cmd_argc;
+	int		cmd_pipe;
+	int		cmd_heredoc;
+	int		cmd_pipe_heredoc;
+	int		cmd_pipe_fd[2];
+	ssize_t	cmd_id;
+}			t_cmd;
+
 typedef struct s_input
 {
-	char	***pipeline;
-	char	**envp;
-	char	*line;
-	char	*prompt;
-	ssize_t	i;
-	int		errquote;
-	int		heredoc;
-	int		pipe;
-	int		space_flag;
-}			t_input;
+	struct s_cmd	*cmds;
+	char			***pipeline;
+	char			**envp;
+	char			*line;
+	char			*prompt;
+	ssize_t			i;
+	int				errquote;
+	int				heredoc;
+	int				pipe;
+	int				space_flag;
+}					t_input;
 
 /*Initialization of input functions.*/
 int		msh_get_envp(char **envp, t_input *init);
