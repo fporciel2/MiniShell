@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/02 11:02:02 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/02 13:40:38 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -27,7 +27,7 @@
  * 
  * For more information on how to contact me by electronic and paper mail
  * please see:
- * https://github.com/Minishell
+ * https://github.com/MiniShell
  *
  * GENERAL CONCEPTS OF ´TOKCMD´ FUNCTIONS SET
  *
@@ -45,12 +45,40 @@
  * functions only splits the pipeline into a linked list of commands, removing
  * the quotes, checks for the correctness of the pipeline's syntax and frees the
  * memory allocated by the tokenizer.
+ *
+ * `MiniShell` does not handle: aliases, keywords, varibles assignment,
+ * functions and command substitutions. So, the syntax of a simple command is
+ * `command [arguments]`.
  */
 
 #include "minishell.h"
+
+static t_cmd	*msh_create_cmds(t_input *init)
+{
+	while (init->pipeline[init->i])
+	{
+		init->cmds[init->i].cmd_name = init->pipeline[init->i][0];
+		if (init->pipeline[init->i][1])
+			init->cmds[init->i].cmd_argv = &init->pipeline[init->i][1];
+		else
+			init->cmds[init->i].cmd_argv = NULL;
+		init->cmds[init->i].cmd_envp = init->envp;
+		init->cmd_argc = (int)msh_cmdlen(init->pipeline[init->i]);
+		init->cmd_id = init->j;
+		init->i++;
+		init->j++;
+	}
+}
 
 int	msh_tokcmd(t_input *init)
 {
 	if (init->errquote)
 		return (write(2, ERRQUOTE, 42), 0);
+	init->i = 0;
+	init->j = 1;
+	init->cmds = (t_cmd *)malloc(sizeof(t_cmd)
+			* msh_pipelen(init->pipeline) + 1);
+	if (!init->cmds)
+		return (strerror(errno), 0);
+	init->cmds = msh_create_cmds(init);
 }

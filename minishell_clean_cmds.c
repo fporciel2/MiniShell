@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_set_signals.c                            :+:      :+:    :+:   */
+/*   minishell_clean_cmds.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/30 08:57:13 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/02 12:08:34 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/02 12:49:16 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/02 13:18:53 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/* <one line to give the program's name and a brief idea
- * of what it does.>
- * Copyright (C) <year>  <name of author>
+/* `MiniShell` is a simple shell for Debian GNU/Linux.
+ * Copyright (C) 2024 Federico Porciello
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,56 +27,13 @@
  * 
  * For more information on how to contact me by electronic and paper mail
  * please see:
- * <your contact information here>
+ * https://github.com/MiniShell
  */
 
 #include "minishell.h"
 
-static void	msh_close_on_error(t_input *init)
+t_cmd	*msh_clean_cmds(t_cmd *cmds)
 {
-	init->envp = msh_clean_cmd(init->envp);
-	free(init);
-	exit(EXIT_FAILURE);
-}
-
-void	msh_handle_sigint(int sig)
-{
-	sig = write(STDOUT_FILENO, "\n", 1);
-	(void)sig;
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void	msh_handle_sigquit(int sig)
-{
-	(void)sig;
-}
-
-void	msh_initialize(t_input *init)
-{
-	init->exit_status = 0;
-	init->pipeline = NULL;
-	init->line = NULL;
-	init->cmds = NULL;
-}
-
-void	msh_set_signals(t_input *init)
-{
-	struct sigaction	sa_int;
-	struct sigaction	sa_quit;
-
-	msh_initialize(init);
-	sa_int.sa_handler = msh_handle_sigint;
-	if (sigemptyset(&sa_int.sa_mask) < 0)
-		msh_close_on_error(init);
-	sa_int.sa_flags = 0;
-	if (sigaction(SIGINT, &sa_int, NULL) < 0)
-		msh_close_on_error(init);
-	sa_quit.sa_handler = SIG_IGN;
-	if (sigemptyset(&sa_quit.sa_mask) < 0)
-		msh_close_on_error(init);
-	sa_quit.sa_flags = 0;
-	if (sigaction(SIGQUIT, &sa_quit, NULL) < 0)
-		msh_close_on_error(init);
+	free(cmds);
+	return (NULL);
 }
