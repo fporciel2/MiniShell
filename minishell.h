@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/02 10:39:06 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/02 11:01:40 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -99,6 +99,7 @@
 # define HEREDOC 1
 # define PIPE 2
 # define PIPE_HEREDOC 3
+# define ERRQUOTE "minishell: syntax error: unclosed quote!\n"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -144,6 +145,7 @@ typedef struct s_input
 	int				heredoc;
 	int				pipe;
 	int				space_flag;
+	unsigned char	exit_status;
 }					t_input;
 
 /*Initialization of input functions.*/

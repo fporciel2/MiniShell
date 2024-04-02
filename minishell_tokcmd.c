@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/01 16:31:11 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/02 11:02:02 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -48,3 +48,9 @@
  */
 
 #include "minishell.h"
+
+int	msh_tokcmd(t_input *init)
+{
+	if (init->errquote)
+		return (write(2, ERRQUOTE, 42), 0);
+}
