@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/04 10:26:35 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/04 10:33:49 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -60,7 +60,7 @@ static void	msh_set_cmds(t_input *init)
 		init->cmds[init->i].cmd_name = init->pipeline[init->i][0];
 		init->cmds[init->i].cmd_argv = init->pipeline[init->i] + 1;
 		init->cmds[init->i].cmd_envp = init->envp;
-		init->cmds[init->i].cmd_argc = msh_cmdlen(init->pipeline[init->i]);
+		init->cmds[init->i].cmd_argc = (int)msh_cmdlen(init->pipeline[init->i]);
 		init->cmds[init->i].cmd_id = init->i + 1;
 		init->i++;
 	}
@@ -85,5 +85,18 @@ int	msh_tokcmd(t_input *init)
 	init->i = 0;
 	init->j = 0;
 	msh_set_cmds(init);
+	while (init->cmds[init->j].cmd_id)
+	{
+		printf("\nCOMMAND:\n");
+		printf("%s\n", init->cmds[init->j].cmd_name);
+		printf("ARGC: %d\n", init->cmds[init->j].cmd_argc);
+		printf("ID: %ld\n", init->cmds[init->j].cmd_id);
+		init->i = 0;
+		printf("ARGUMENTS:\n");
+		while (init->cmds[init->j].cmd_argv[init->i])
+			printf("%s ", init->cmds[init->j].cmd_argv[init->i++]);
+		printf("\n");
+		init->j++;
+	}
 	return (1);
 }
