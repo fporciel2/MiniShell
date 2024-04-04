@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/04 10:13:01 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/04 12:26:39 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -169,6 +169,9 @@ char	***msh_append_token(t_input *init);
 char	***msh_append_char(t_input *init);
 /*Transformation of tokens into simple and compund commands.*/
 int		msh_tokcmd(t_input *init);
+char	*msh_unquote_name(t_input *init);
+char	**msh_unquote_argv(t_input *init);
+ssize_t	msh_new_cmdlen(t_cmd cmd);
 /*Utils functions.*/
 ssize_t	msh_pipelen(char ***pipeline);
 ssize_t	msh_cmdlen(char **cmd);
