@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/02 15:58:09 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/04 10:01:00 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -53,68 +53,27 @@
 
 #include "minishell.h"
 
-/*static int	msh_quote_removal(t_input *init)
-{
-}
-*/
-static t_cmd	*msh_lastcmd(t_input *init)
-{
-	init->cmds[init->i].cmd_name = NULL;
-	init->cmds[init->i].cmd_argv = NULL;
-	init->cmds[init->i].cmd_envp = NULL;
-	init->cmds[init->i].cmd_argc = 0;
-	init->cmds[init->i].cmd_id = 0;
-	return (init->cmds);
-}
-
-static t_cmd	*msh_create_cmds(t_input *init)
-{
-	while (init->pipeline[init->i])
-	{
-		init->cmds[init->i].cmd_name = init->pipeline[init->i][0];
-		if (init->pipeline[init->i][1])
-			init->cmds[init->i].cmd_argv = &init->pipeline[init->i][1];
-		else
-			init->cmds[init->i].cmd_argv = NULL;
-		init->cmds[init->i].cmd_envp = init->envp;
-		init->cmds[init->i].cmd_argc = (int)msh_cmdlen(init->pipeline[init->i]);
-		init->cmds[init->i].cmd_id = init->j;
-		init->i++;
-		init->j++;
-	}
-	return (msh_lastcmd(init));
-}
-
 int	msh_tokcmd(t_input *init)
 {
+	ssize_t	i;
+	ssize_t	j;
+
 	if (init->errquote)
 	{
 		init->i = write(2, ERRQUOTE, 42);
 		return (0);
 	}
-	init->i = 0;
-	init->j = 1;
-	init->cmds = (t_cmd *)malloc(sizeof(t_cmd)
-			* msh_pipelen(init->pipeline) + 1);
-	if (!init->cmds)
-		return (strerror(errno), 0);
-	init->cmds = msh_create_cmds(init);
-	ssize_t	n = 0;
-	ssize_t	k = 0;
-	while (init->cmds[n].cmd_id)
+	i = 0;
+	while (init->pipeline[i])
 	{
-		k = write(1, "\nCOMMAND\n", 9);
-		k = printf("%s\n", init->cmds[n].cmd_name);
-		k = 0;
-		while (init->cmds[n].cmd_argv && init->cmds[n].cmd_argv[k])
+		j = 0;
+		while (init->pipeline[i][j])
 		{
-			printf("%s\n", init->cmds[n].cmd_argv[k]);
-			k++;
+			printf("%s ", init->pipeline[i][j]);
+			j++;
 		}
-		n++;
+		printf("\n");
+		i++;
 	}
-	/*if (!msh_quote_removal(init))
-		return (strerror(errno), free(init->cmds), 0);*/
-	init->cmds = msh_clean_cmds(init->cmds);
-	return (0);
+	return (1);
 }
