@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/04 10:01:00 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/04 10:08:14 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -56,7 +56,6 @@
 int	msh_tokcmd(t_input *init)
 {
 	ssize_t	i;
-	ssize_t	j;
 
 	if (init->errquote)
 	{
@@ -64,16 +63,11 @@ int	msh_tokcmd(t_input *init)
 		return (0);
 	}
 	i = 0;
+	printf("NUMBER OF COMMANDS: %ld\n", msh_pipelen(init->pipeline));
 	while (init->pipeline[i])
 	{
-		j = 0;
-		while (init->pipeline[i][j])
-		{
-			printf("%s ", init->pipeline[i][j]);
-			j++;
-		}
-		printf("\n");
+		printf("TOKEN IN COMMANDS: %ld\n", msh_cmdlen(init->pipeline[i]));
 		i++;
 	}
-	return (1);
+	return (0);
 }
