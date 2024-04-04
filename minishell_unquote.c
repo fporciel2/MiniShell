@@ -6,12 +6,11 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 12:31:56 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/04 12:32:02 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/04 12:41:47 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/* <one line to give the program's name and a brief idea
- * of what it does.>
- * Copyright (C) <year>  <name of author>
+/* `MiniShell' is a simple shell for Debian GNU/Linux.
+ * Copyright (C) 2024 Federico Porciello
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +27,11 @@
  * 
  * For more information on how to contact me by electronic and paper mail
  * please see:
- * <your contact information here>
+ * https://github.com/fporciel2/MiniShell
  */
 
 #include "minishell.h"
+
+char	*msh_unquote_name(t_input *init)
+{
+}
