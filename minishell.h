@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/02 15:33:43 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/04 10:13:01 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -143,6 +143,9 @@ typedef struct s_input
 	char			*prompt;
 	ssize_t			i;
 	ssize_t			j;
+	ssize_t			pipelen;
+	ssize_t			cmdlen;
+	ssize_t			strlen;
 	int				errquote;
 	int				heredoc;
 	int				pipe;

@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/04 10:08:14 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/04 10:26:35 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -53,21 +53,37 @@
 
 #include "minishell.h"
 
+static void	msh_set_cmds(t_input *init)
+{
+	while (init->pipeline[init->i])
+	{
+		init->cmds[init->i].cmd_name = init->pipeline[init->i][0];
+		init->cmds[init->i].cmd_argv = init->pipeline[init->i] + 1;
+		init->cmds[init->i].cmd_envp = init->envp;
+		init->cmds[init->i].cmd_argc = msh_cmdlen(init->pipeline[init->i]);
+		init->cmds[init->i].cmd_id = init->i + 1;
+		init->i++;
+	}
+	init->cmds[init->i].cmd_name = NULL;
+	init->cmds[init->i].cmd_argv = NULL;
+	init->cmds[init->i].cmd_envp = NULL;
+	init->cmds[init->i].cmd_argc = 0;
+	init->cmds[init->i].cmd_id = 0;
+}
+
 int	msh_tokcmd(t_input *init)
 {
-	ssize_t	i;
-
 	if (init->errquote)
 	{
 		init->i = write(2, ERRQUOTE, 42);
 		return (0);
 	}
-	i = 0;
-	printf("NUMBER OF COMMANDS: %ld\n", msh_pipelen(init->pipeline));
-	while (init->pipeline[i])
-	{
-		printf("TOKEN IN COMMANDS: %ld\n", msh_cmdlen(init->pipeline[i]));
-		i++;
-	}
-	return (0);
+	init->cmdlen = msh_pipelen(init->pipeline);
+	init->cmds = (t_cmd *)malloc(sizeof(t_cmd) * (init->cmdlen + 1));
+	if (!init->cmds)
+		return (strerror(errno), 0);
+	init->i = 0;
+	init->j = 0;
+	msh_set_cmds(init);
+	return (1);
 }
