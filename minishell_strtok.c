@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 11:19:00 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/01 13:02:52 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/08 11:21:40 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -73,24 +73,25 @@ static int	msh_quoting(t_input *init)
 	char	quote;
 
 	quote = init->line[init->i];
-	init->pipeline = msh_append_token(init);
+	if ((init->line[init->i - 1] == 9) || (init->line[init->i - 1] == 10)
+		|| (init->line[init->i - 1] == 32))
+		init->pipeline = msh_append_token(init);
+	else
+		init->pipeline = msh_append_char(init);
 	init->errquote = 1;
-	if (!init->pipeline)
-		return (strerror(errno), 0);
 	init->i++;
-	while (init->line[init->i] && (init->line[init->i] != quote))
+	while (init->pipeline && init->line[init->i]
+			&& (init->line[init->i] != quote))
 	{
 		init->pipeline = msh_append_char(init);
 		if (!init->pipeline)
 			return (strerror(errno), 0);
 		init->i++;
 	}
-	if (!init->line[init->i])
+	if (!init->pipeline || !init->line[init->i])
 		return (1);
 	else
 		init->pipeline = msh_append_char(init);
-	if (!init->pipeline)
-		return (strerror(errno), 0);
 	return (0);
 }
 
