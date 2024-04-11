@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 12:31:56 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/11 19:08:24 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/11 19:21:04 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell' is a simple shell for Debian GNU/Linux.
@@ -32,7 +32,18 @@
 
 #include "minishell.h"
 
-char	*msh_unquote_name(t_input *init, int param)
+char **msh_unquote_argv(t_input *init)
+{
+	init->j = 0;
+	while (init->cmds[init->i].cmd_argv[init->j])
+	{
+		init->cmds[init->i].cmd_argv[init->j] = msh_unquote_str(init, 1);
+		init->j++;
+	}
+	return (init->cmds[init->i].cmd_argv);
+}
+
+char	*msh_unquote_str(t_input *init, int param)
 {
 	ssize_t	i;
 	char	*str;
