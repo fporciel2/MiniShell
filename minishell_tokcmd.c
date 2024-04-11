@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/08 10:20:27 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:10:58 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -53,7 +53,7 @@
 
 #include "minishell.h"
 
-static void	msh_remove_quotes(t_input *init)
+/*static void	msh_remove_quotes(t_input *init)
 {
 	init->j = 0;
 	init->i = 0;
@@ -83,7 +83,7 @@ static void	msh_set_cmds(t_input *init)
 	init->cmds[init->i].cmd_argc = 0;
 	init->cmds[init->i].cmd_id = 0;
 }
-
+*/
 int	msh_tokcmd(t_input *init)
 {
 	if (init->errquote)
@@ -91,6 +91,7 @@ int	msh_tokcmd(t_input *init)
 		init->i = write(2, ERRQUOTE, 42);
 		return (0);
 	}
+	/*
 	init->cmdlen = msh_pipelen(init->pipeline);
 	init->cmds = (t_cmd *)malloc(sizeof(t_cmd) * (init->cmdlen + 1));
 	if (!init->cmds)
@@ -98,5 +99,19 @@ int	msh_tokcmd(t_input *init)
 	init->i = 0;
 	msh_set_cmds(init);
 	msh_remove_quotes(init);
+	return (1);
+	*/
+	init->i = 0;
+	while (init->pipeline[init->i])
+	{
+		init->j = 0;
+		printf("COMMAND:\n\n");
+		while (init->pipeline[init->i][init->j])
+		{
+			printf("TOKEN: %s\n", init->pipeline[init->i][init->j]);
+			init->j++;
+		}
+		init->i++;
+	}
 	return (1);
 }
