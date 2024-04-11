@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 11:19:00 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/08 11:21:40 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/11 20:22:51 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -73,8 +73,8 @@ static int	msh_quoting(t_input *init)
 	char	quote;
 
 	quote = init->line[init->i];
-	if ((init->line[init->i - 1] == 9) || (init->line[init->i - 1] == 10)
-		|| (init->line[init->i - 1] == 32))
+	if (init->i && ((init->line[init->i - 1] == 9)
+		|| (init->line[init->i - 1] == 10) || (init->line[init->i - 1] == 32)))
 		init->pipeline = msh_append_token(init);
 	else
 		init->pipeline = msh_append_char(init);
