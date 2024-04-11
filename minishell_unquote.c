@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 12:31:56 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/11 18:23:30 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/11 18:48:48 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell' is a simple shell for Debian GNU/Linux.
@@ -32,24 +32,30 @@
 
 #include "minishell.h"
 
-char	*msh_unquote_name(t_input *init)
+char	*msh_unquote_name(t_input *init, int param)
 {
 	ssize_t	i;
+	char	*str;
 	char	quote;
 
+	if (param == 0)
+		str = init->cmds[init->i].cmd_name;
+	else
+		str = init->cmds[init->i].cmd_argv[init->j];
 	i = 0;
-	if (!init->cmds[init->i].cmd_name)
+	if (!str)
 		return (NULL);
-	while (init->cmds[init->i].cmd_name[i])
+	while (str[i])
 	{
-		if ((init->cmds[init->i].cmd_name[i] == 34)
-			|| (init->cmds[init->i].cmd_name[i] == 39))
+		if ((str[i] == 34) || (str[i] == 39))
 		{
-			quote = init->cmds[init->i].cmd_name[i];
-			init->cmds[init->i].cmd_name = msh_replace_string(init, quote);
-			init->pipeline[init->i][0] = init->cmds[init->i].cmd_name;
+			quote = str[i];
+			str = msh_replace_string(init, quote);
+			init->pipeline[init->i][init->j + 1] = init->cmds[init->i].cmd_name;
 			i = 0;
 			continue ;
 		}
+		i++;
 	}
+	return (init->cmds[init->i].cmd_name);
 }
