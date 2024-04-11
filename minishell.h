@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/11 18:43:25 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/11 20:07:26 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -119,6 +119,13 @@
 # include <termios.h>
 # include <curses.h>
 # include <term.h>
+
+typedef struct s_unquote_counters
+{
+	ssize_t	i;
+	ssize_t	j;
+	int		flag;
+}			t_unquote_counters;
 
 typedef struct s_cmd
 {

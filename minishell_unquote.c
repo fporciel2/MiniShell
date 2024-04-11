@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 12:31:56 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/11 19:57:50 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/11 20:15:12 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell' is a simple shell for Debian GNU/Linux.
@@ -34,6 +34,26 @@
 
 static char	*msh_strreplace(char *str, char quote, char *new_str)
 {
+	t_unquote_counters	count;
+
+	count.i = 0;
+	count.j = 0;
+	count.flag = 0;
+	while (str[count.i])
+	{
+		if ((str[count.i] == quote) && !count.flag++)
+			count.i++;
+		else if ((str[count.i] == quote) && (count.flag++ == 1))
+			count.i++;
+		else
+		{
+			new_str[count.j] = str[count.i];
+			count.i++;
+			count.j++;
+		}
+	}
+	new_str[count.j] = 0;
+	return (free(str), new_str);
 }
 
 static char	*msh_replace_string(t_input *init, char quote, int param)
