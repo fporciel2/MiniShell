@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 12:31:56 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/11 20:15:12 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/11 20:30:08 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell' is a simple shell for Debian GNU/Linux.
@@ -69,7 +69,7 @@ static char	*msh_replace_string(t_input *init, char quote, int param)
 		return (NULL);
 	if (!*str)
 		return (str);
-	new_str = (char *)malloc(sizeof(char) * (msh_strlen(str) - 1));
+	new_str = (char *)malloc(sizeof(char) * (msh_strlen(str)));
 	if (!new_str)
 		return (strerror(errno), str);
 	return (msh_strreplace(str, quote, new_str));
@@ -105,7 +105,7 @@ char	*msh_unquote_str(t_input *init, int param)
 		{
 			quote = str[i];
 			str = msh_replace_string(init, quote, param);
-			init->pipeline[init->i][init->j + 1] = init->cmds[init->i].cmd_name;
+			init->pipeline[init->i][init->j + 1] = str;
 			i = 0;
 			continue ;
 		}
