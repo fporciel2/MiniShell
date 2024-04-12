@@ -64,21 +64,21 @@ static void	msh_unslide(char *str, char *new, ssize_t *i, ssize_t *j)
 	if (!str[*i])
 		return ;
 	flag = str[*i];
-	*i++;
+	(*i)++;
 	while (str[*i] && (str[*i] != flag))
 	{
 		new[*j] = str[*i];
-		*i++;
-		*j++;
+		(*i)++;
+		(*j)++;
 	}
 	if (str[*i])
 	{
-		*i++;
+		(*i)++;
 		while (str[*i])
 		{
 			new[*j] = str[*i];
-			*i++;
-			*j++;
+			(*i)++;
+			(*j)++;
 		}
 	}
 }
@@ -88,8 +88,8 @@ static void	msh_slide(char *str, char *new, ssize_t *i, ssize_t *j)
 	while (str[*i] && (str[*i] != 34) && (str[*i] != 34))
 	{
 		new[*j] = str[*i];
-		*j++;
-		*i++;
+		(*j)++;
+		(*i)++;
 	}
 }
 
