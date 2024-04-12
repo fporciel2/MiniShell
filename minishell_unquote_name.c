@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 09:43:29 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/12 14:24:29 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/12 15:35:51 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -57,11 +57,29 @@ static int	msh_check_quotes(char *str)
 	return (0);
 }
 
+static void	msh_unslide(char *str, char *new, ssize_t *i, ssize_t *j)
+{
+	char	flag;
+
+	if (!str[*i])
+		return ;
+	flag = str[*i];
+}
+
+static void	msh_slide(char *str, char *new, ssize_t *i, ssize_t *j)
+{
+	while (str[*i] && (str[*i] != 34) && (str[*i] != 34))
+	{
+		new[*j] = str[*i];
+		*j++;
+		*i++;
+	}
+}
+
 static char	*msh_unquote(char *str)
 {
 	ssize_t	i;
 	ssize_t	j;
-	char	quote_flag;
 	char	*new;
 
 	i = 0;
@@ -69,9 +87,9 @@ static char	*msh_unquote(char *str)
 	new = (char *)malloc(sizeof(char) * (msh_strlen(str) - 1));
 	if (!new)
 		return (str);
-	new = NULL;
-	msh_slide(str, &i, &j);
-	msh_unslide(
+	msh_slide(str, new, &i, &j);
+	msh_unslide(str, new, &i, &j);
+	return (new);
 }
 
 char	*msh_unquote_name(t_input *init)
@@ -85,6 +103,7 @@ char	*msh_unquote_name(t_input *init)
 		str = msh_unquote(str);
 		init->pipeline[init->i][0] = str;
 		free(init->cmds[init->i].cmd_name);
+		init->cmds[init->i].cmd_name = str;
 	}
 	if (msh_check_quotes(str) == 2)
 		init->errquote = 1;
