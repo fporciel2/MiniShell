@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/12 09:43:29 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/12 15:35:51 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/12 16:22:22 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -64,6 +64,23 @@ static void	msh_unslide(char *str, char *new, ssize_t *i, ssize_t *j)
 	if (!str[*i])
 		return ;
 	flag = str[*i];
+	*i++;
+	while (str[*i] && (str[*i] != flag))
+	{
+		new[*j] = str[*i];
+		*i++;
+		*j++;
+	}
+	if (str[*i])
+	{
+		*i++;
+		while (str[*i])
+		{
+			new[*j] = str[*i];
+			*i++;
+			*j++;
+		}
+	}
 }
 
 static void	msh_slide(char *str, char *new, ssize_t *i, ssize_t *j)
