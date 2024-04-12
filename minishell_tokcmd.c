@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/12 13:27:04 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/12 16:26:10 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -59,7 +59,7 @@ static void	msh_remove_quotes(t_input *init)
 	init->i = 0;
 	while (init->cmds[init->i].cmd_id)
 	{
-		init->cmds[init->i].cmd_name = msh_unquote_name(init, 0);
+		init->cmds[init->i].cmd_name = msh_unquote_name(init);
 		if (init->errquote)
 		{
 			init->i = write(2, ERRQUOTE, 42);
