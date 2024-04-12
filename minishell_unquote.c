@@ -41,10 +41,16 @@ static char	*msh_strreplace(char *str, char quote, char *new_str)
 	count.flag = 0;
 	while (str[count.i])
 	{
-		if ((str[count.i] == quote) && !count.flag++)
+		if ((str[count.i] == quote) && !count.flag)
+		{
+			count.flag++;
 			count.i++;
-		else if ((str[count.i] == quote) && (count.flag++ == 1))
+		}
+		else if ((str[count.i] == quote) && (count.flag == 1))
+		{
+			count.flag++;
 			count.i++;
+		}
 		else
 		{
 			new_str[count.j] = str[count.i];
@@ -72,6 +78,7 @@ static char	*msh_replace_string(t_input *init, char quote, int param)
 	new_str = (char *)malloc(sizeof(char) * (msh_strlen(str)));
 	if (!new_str)
 		return (strerror(errno), str);
+	printf("CHECK\n");
 	return (msh_strreplace(str, quote, new_str));
 }
 
@@ -104,6 +111,7 @@ char	*msh_unquote_str(t_input *init, int param)
 		if ((str[i] == 34) || (str[i] == 39))
 		{
 			quote = str[i];
+			printf("STRING: %s\n", str);
 			str = msh_replace_string(init, quote, param);
 			init->pipeline[init->i][init->j + 1] = str;
 			i = 0;
