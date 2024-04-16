@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/12 16:26:10 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/16 12:02:45 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -53,66 +53,8 @@
 
 #include "minishell.h"
 
-static void	msh_remove_quotes(t_input *init)
-{
-	init->j = 0;
-	init->i = 0;
-	while (init->cmds[init->i].cmd_id)
-	{
-		init->cmds[init->i].cmd_name = msh_unquote_name(init);
-		if (init->errquote)
-		{
-			init->i = write(2, ERRQUOTE, 42);
-			return ;
-		}
-		//init->cmds[init->i].cmd_argv = msh_unquote_argv(init);
-		//init->cmds[init->i].cmd_argc = (int)msh_new_cmdlen(init->cmds[init->i]);
-		init->i++;
-	}
-}
-
-static void	msh_set_cmds(t_input *init)
-{
-	while (init->pipeline[init->i])
-	{
-		init->cmds[init->i].cmd_name = init->pipeline[init->i][0];
-		init->cmds[init->i].cmd_argv = init->pipeline[init->i] + 1;
-		init->cmds[init->i].cmd_envp = init->envp;
-		init->cmds[init->i].cmd_argc = (int)msh_cmdlen(init->pipeline[init->i]);
-		init->cmds[init->i].cmd_id = init->i + 1;
-		init->i++;
-	}
-	init->cmds[init->i].cmd_name = NULL;
-	init->cmds[init->i].cmd_argv = NULL;
-	init->cmds[init->i].cmd_envp = NULL;
-	init->cmds[init->i].cmd_argc = 0;
-	init->cmds[init->i].cmd_id = 0;
-}
-
 int	msh_tokcmd(t_input *init)
 {
-	if (init->errquote)
-	{
-		init->i = write(2, ERRQUOTE, 42);
-		return (0);
-	}
-	init->cmdlen = msh_pipelen(init->pipeline);
-	init->cmds = (t_cmd *)malloc(sizeof(t_cmd) * (init->cmdlen + 1));
-	if (!init->cmds)
-		return (strerror(errno), 0);
-	init->i = 0;
-	msh_set_cmds(init);
-	msh_remove_quotes(init);
-	if (init->errquote)
-		return (0);
-	ssize_t	i = 0;
-	while (init->cmds[i].cmd_id)
-	{
-		printf("NEW CMD:%s\n", init->cmds[i].cmd_name);
-		ssize_t	j = 0;
-		while (init->cmds[i].cmd_argv[j])
-			printf("NEW ARG: %s\n", init->cmds[i].cmd_argv[j++]);
-		i++;
-	}
-	return (1);
+	if (errquote)
+		return (write(1, ERRQUOTE, 42), 0);
 }

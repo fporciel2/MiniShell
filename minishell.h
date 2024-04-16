@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/12 09:51:31 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/16 11:41:43 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -99,7 +99,7 @@
 # define HEREDOC 1
 # define PIPE 2
 # define PIPE_HEREDOC 3
-# define ERRQUOTE "minishell: syntax error: unclosed quote!\n"
+# define ERRQUOTE "minishell: syntax error: unclosed quote!!\n"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -120,24 +120,17 @@
 # include <curses.h>
 # include <term.h>
 
-typedef struct s_unquote_counters
-{
-	ssize_t	i;
-	ssize_t	j;
-	int		flag;
-}			t_unquote_counters;
-
 typedef struct s_cmd
 {
-	char	*cmd_name;
-	char	**cmd_argv;
-	char	**cmd_envp;
-	int		cmd_argc;
-	int		cmd_pipe;
-	int		cmd_heredoc;
-	int		cmd_pipe_heredoc;
-	int		cmd_pipe_fd_input;
-	int		cmd_pipe_fd_output;
+	char	*name;
+	char	**argv;
+	char	**envp;
+	int		argc;
+	int		pipe;
+	int		heredoc;
+	int		pipe_heredoc;
+	int		fd_input;
+	int		fd_output;
 	ssize_t	cmd_id;
 }			t_cmd;
 
@@ -176,9 +169,6 @@ char	***msh_append_token(t_input *init);
 char	***msh_append_char(t_input *init);
 /*Transformation of tokens into simple and compund commands.*/
 int		msh_tokcmd(t_input *init);
-char	*msh_unquote_name(t_input *init);
-char	**msh_unquote_argv(t_input *init);
-ssize_t	msh_new_cmdlen(t_cmd cmd);
 /*Utils functions.*/
 ssize_t	msh_pipelen(char ***pipeline);
 ssize_t	msh_cmdlen(char **cmd);
