@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/16 13:03:57 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/16 15:25:45 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -53,27 +53,46 @@
 
 #include "minishell.h"
 
+static t_cmd	*msh_lstcmds(t_cmd *prev, ssize_t cmdlen)
+{
+	t_cmd	*new;
+
+	new = (t_cmd *)malloc(sizeof(t_cmd));
+	if (new == NULL)
+		return (NULL);
+	new->name = msh_copy_name(init);
+	if (!new->name)
+		return (free(new), NULL);
+	new->argv = msh_copy_cmd(init);
+	if (!new->argv)
+		return (free(new->name), free(new), NULL);
+	new->envp = init->envp;
+	new->next = NULL;
+	new->prev = prev;
+	return (new);
+}
+
 int	msh_tokcmd(t_input *init)
 {
 	t_cmd	*tmp;
 	
 	init->i = -1;
 	init->cmds = NULL;
-	while (init->pipeline[++i])
+	while (init->pipeline[++init->i])
 	{
 		init->cmdlen = msh_cmdlen(init->pipeline[init->i]);
 		if (!init->cmds)
 		{
-			tmp = msh_lstcmds(NULL, init->cmdlen);
+			tmp = msh_lstcmds(NULL, init->cmdlen, init);
 			init->cmds = tmp;
 		}
 		else
 		{
-			tmp->next = msh_lstcmds(tmp, init->cmdlen);
+			tmp->next = msh_lstcmds(tmp, init->cmdlen, init);
 			tmp = tmp->next;
 		}
 		tmp->envp = init->envp;
-		if (!tmp || msh_parsing(init->cmds))
+		if (!tmp || msh_parsing(init->cmds, init))
 			return (0);
 	}
 	return (1);
