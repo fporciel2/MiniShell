@@ -177,8 +177,6 @@ int		msh_tokcmd(t_input *init);
 /*Syntax analysis and expansion.*/
 int		msh_parsing(t_cmd *head, t_input *init);
 int		msh_is_quoted(char *str);
-void	msh_perform_expansion(t_cmd *head, t_input *init);
-void	msh_cautiously_expand(t_cmd *head, t_input *init);
 /*Utils functions.*/
 ssize_t	msh_pipelen(char ***pipeline);
 ssize_t	msh_cmdlen(char **cmd);

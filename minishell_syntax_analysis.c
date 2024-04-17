@@ -32,8 +32,6 @@
 
 #include "minishell.h"
 
-
-
 int	msh_is_quoted(char *str)
 {
 	ssize_t	i;
@@ -50,7 +48,7 @@ int	msh_is_quoted(char *str)
 	return (0);
 }
 
-void	msh_perform_expansion(t_cmd *head, t_input *init)
+static void	msh_perform_expansion(t_cmd *head, t_input *init)
 {
 	ssize_t	i;
 
@@ -59,7 +57,7 @@ void	msh_perform_expansion(t_cmd *head, t_input *init)
 	{
 		if (head->argv[init->i][i] == 36)
 		{
-			head->argv = msh_normal_expansion(head, init);
+			head->argv = msh_normal_exp(head, init);
 			if (init->err_xpand)
 				return ;
 			i = 0;
@@ -69,28 +67,29 @@ void	msh_perform_expansion(t_cmd *head, t_input *init)
 	}
 }
 
-void	msh_cautiously_expand(t_cmd *head, t_input *init)
+static void	msh_cautiously_expand(t_cmd *head, t_input *init)
 {
 	ssize_t	i;
 
 	i = 0;
 	while (head->argv[init->i][i])
 	{
-		if ((head->argv[init->i][i] == 36) || (head->argv[init->i][i] == 34)
-			|| (head->argv[init->i][i] == 39))
+		if (head->argv[init->i][i] == 36)
 		{
-			if (head->argv[init->i][i] == 36)
-				head->argv = msh_normal_expansion(head, init);
-			else if (head->argv[init->i][i] == 34)
-				head->argv = msh_quoted_expansion(head, init);
+			if (!msh_is_in_quotes(head->argv[init->i]))
+				head->argv = msh_normal_exp(head, init);
+			else if (!msh_is_in_single_quotes(head->argv[init->i]))
+				head->argv = msh_double_quotes_exp(head, init);
 			else
-				msh_do_nothing(head, init);
+			{
+				i++;
+				continue ;
+			}
 			if (init->err_xpand)
 				return ;
 			i = 0;
 			continue ;
 		}
-		i++;
 	}
 }
 
