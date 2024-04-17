@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 12:45:49 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 12:48:37 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:46:18 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,4 +32,15 @@
 
 #include "minishell.h"
 
+int	msh_parsing(t_cmd *head, t_input *init)
+{
+	/*t_cmd	*tmp;
 
+	if (!head)
+		return (0);
+	if (head->name[0] == 124)
+		return (msh_syntax_error(init, ERRPIPE));*/
+	(void)head;
+	(void)init;
+	return (1);
+}

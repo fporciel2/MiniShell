@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 12:50:58 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:24:26 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -53,6 +53,17 @@
 
 #include "minishell.h"
 
+static int	msh_check_double_pipes(t_input *init)
+{
+	if ((init->cmds && (init->cmds->name[0] == 124))
+		|| (init->i < msh_pipelen(init->pipelen)))
+	{
+		init->errquote = write(2, ERRPIPE, 42); 
+		init->exit_status = 2;
+	}
+	return (0);
+}
+
 static char	**msh_copy_cmd(t_input *init)
 {
 	char	**tmp;
@@ -90,6 +101,8 @@ static char	*msh_copy_name(t_input *init)
 	tmp = init->pipeline[init->i];
 	if (init->i != 0)
 		tmp++;
+	if (!*tmp)
+		return (NULL);
 	name = (char *)malloc(sizeof(char) * (msh_strlen(*tmp) + 1));
 	if (name == NULL)
 		return (NULL);
@@ -137,16 +150,17 @@ int	msh_tokcmd(t_input *init)
 		if (!init->cmds)
 		{
 			tmp = msh_lstcmds(NULL, init);
+			tmp->envp = init->envp;
 			init->cmds = tmp;
 		}
 		else
 		{
 			tmp->next = msh_lstcmds(tmp, init);
+			tmp->envp = init->envp;
 			tmp = tmp->next;
 		}
-		tmp->envp = init->envp;
-		if (!tmp/* || msh_parsing(init->cmds, init)*/)
-			return (0);
+		if (!tmp || !msh_parsing(init->cmds, init))
+			return (msh_check_double_pipes(init);
 	}
 	tmp1 = init->cmds;
 	while (tmp1)

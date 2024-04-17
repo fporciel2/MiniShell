@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 10:31:58 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 13:14:54 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -99,7 +99,8 @@
 # define HEREDOC 1
 # define PIPE 2
 # define PIPE_HEREDOC 3
-# define ERRQUOTE "minishell: syntax error: unclosed quote!!\n"
+# define ERRQUOTE "Unclosed quotes!\n"
+# define ERRPIPE "Please, use pipes correctly, you bas**rd!\n"
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -170,6 +171,8 @@ char	***msh_append_token(t_input *init);
 char	***msh_append_char(t_input *init);
 /*Transformation of tokens into simple and compund commands.*/
 int		msh_tokcmd(t_input *init);
+/*Syntax analysis.*/
+int		msh_parsing(t_cmd *head, t_input *init);
 /*Utils functions.*/
 ssize_t	msh_pipelen(char ***pipeline);
 ssize_t	msh_cmdlen(char **cmd);
