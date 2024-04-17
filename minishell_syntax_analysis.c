@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 12:45:49 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 16:32:13 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 18:05:42 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -76,9 +76,9 @@ static void	msh_cautiously_expand(t_cmd *head, t_input *init)
 	{
 		if (head->argv[init->i][i] == 36)
 		{
-			if (!msh_is_in_quotes(head->argv[init->i]))
+			if (!msh_is_in_quotes(head->argv[init->i], i))
 				head->argv = msh_normal_exp(head, init);
-			else if (!msh_is_in_single_quotes(head->argv[init->i]))
+			else if (!msh_is_in_single_quotes(head->argv[init->i], i))
 				head->argv = msh_double_quotes_exp(head, init);
 			else
 			{
