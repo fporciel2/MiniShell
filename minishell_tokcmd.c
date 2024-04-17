@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 11:01:50 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 12:01:40 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -61,17 +61,12 @@ static char	**msh_copy_cmd(t_input *init)
 
 	i = 0;
 	tmp = init->pipeline[init->i];
-	printf("%s\n", init->pipeline[init->i][0]);
-	printf("%s\n", init->pipeline[init->i][1]);
-	printf("%p\n", (void *)tmp);
-	tmp++;
 	if ((init->i != 0) && (init->pipeline[0][0][0] == 124))
 		tmp++;
-	printf("%p\n", (void *)tmp);
-	printf("%s\n", *tmp);
-	if (!tmp)
+	if (!*tmp)
 		return (NULL);
-	tmp1 = (char **)malloc(sizeof(char) * (msh_cmdlen(tmp) + 1));
+	tmp1 = (char **)malloc(sizeof(char *) * (msh_cmdlen(tmp) + 1));
+	tmp1[0] = NULL;
 	if (tmp1 == NULL)
 		return (NULL);
 	while (tmp[i])
@@ -134,6 +129,8 @@ int	msh_tokcmd(t_input *init)
 	
 	init->i = -1;
 	init->cmds = NULL;
+	ssize_t	i = 0;
+	tmp = NULL;
 	while (init->pipeline[++init->i])
 	{
 		if (!init->cmds)
