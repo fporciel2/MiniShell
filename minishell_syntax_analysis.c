@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 12:45:49 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 14:50:55 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 16:32:13 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -32,15 +32,80 @@
 
 #include "minishell.h"
 
+int	msh_is_quoted(char *str)
+{
+	ssize_t	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == 39)
+			return (1);
+		else if (str[i] == 34)
+			return (2);
+		i++;
+	}
+	return (0);
+}
+
+void	msh_perform_expansion(t_cmd *head, t_input *init)
+{
+	ssize_t	i;
+
+	i = 0;
+	while (head->argv[init->i][i])
+	{
+		if (head->argv[init->i][i] == 36)
+		{
+			head->argv = msh_normal_expansion(head, init);
+			if (init->err_xpand)
+				return ;
+			i = 0;
+			continue ;
+		}
+		i++;
+	}
+}
+
+void	msh_cautiously_expand(t_cmd *head, t_input *init)
+{
+	ssize_t	i;
+
+	i = 0;
+	while (head->argv[init->i][i])
+	{
+		if ((head->argv[init->i][i] == 36) || (head->argv[init->i][i] == 34)
+			|| (head->argv[init->i][i] == 39))
+		{
+			if (head->argv[init->i][i] == 36)
+				head->argv = msh_normal_expansion(head, init);
+			else if (head->argv[init->i][i] == 39)
+				head->argv = msh_abnormal_expansion(head, init);
+			else
+
+			if (init->err_xpand)
+				return ;
+			i = 0;
+			continue ;
+		}
+		i++;
+	}
+}
+
 int	msh_parsing(t_cmd *head, t_input *init)
 {
-	/*t_cmd	*tmp;
-
-	if (!head)
-		return (0);
-	if (head->name[0] == 124)
-		return (msh_syntax_error(init, ERRPIPE));*/
-	(void)head;
-	(void)init;
-	return (1);
+	init->err_xpand = 1;
+	while (head)
+	{
+		init->i = 0;
+		while (head->argv[init->i])
+		{
+			if (!msh_is_quoted(head->argv[init->i]))
+				msh_perform_expansion(head, init);
+			else
+				msh_cautiously_expand(head, init);
+		}
+		head = head->next;
+	}
+	return (init->err_xpand);
 }

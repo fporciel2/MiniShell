@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 13:14:54 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 16:03:19 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -126,6 +126,8 @@ typedef struct s_cmd
 	char			*name;
 	char			**argv;
 	char			**envp;
+	char			**exp;
+	char			*subst;
 	int				argc;
 	int				pipe;
 	int				heredoc;
@@ -150,6 +152,7 @@ typedef struct s_input
 	ssize_t			strlen;
 	int				errquote;
 	int				heredoc;
+	int				err_xpand;
 	int				pipe;
 	int				space_flag;
 	unsigned char	exit_status;
@@ -171,8 +174,11 @@ char	***msh_append_token(t_input *init);
 char	***msh_append_char(t_input *init);
 /*Transformation of tokens into simple and compund commands.*/
 int		msh_tokcmd(t_input *init);
-/*Syntax analysis.*/
+/*Syntax analysis and expansion.*/
 int		msh_parsing(t_cmd *head, t_input *init);
+int		msh_is_quoted(char *str);
+void	msh_perform_expansion(t_cmd *head, t_input *init);
+void	msh_cautiously_expand(t_cmd *head, t_input *init);
 /*Utils functions.*/
 ssize_t	msh_pipelen(char ***pipeline);
 ssize_t	msh_cmdlen(char **cmd);
