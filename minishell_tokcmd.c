@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 12:20:13 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 12:29:07 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -61,7 +61,7 @@ static char	**msh_copy_cmd(t_input *init)
 
 	i = 0;
 	tmp = init->pipeline[init->i];
-	if ((init->i != 0) && (init->pipeline[0][0][0] == 124))
+	if (init->i != 0)
 		tmp++;
 	if (!*tmp)
 		return (NULL);
@@ -88,7 +88,7 @@ static char	*msh_copy_name(t_input *init)
 
 	i = 0;
 	tmp = init->pipeline[init->i];
-	if ((init->i != 0) && (init->pipeline[0][0][0] == 124))
+	if (init->i != 0)
 		tmp++;
 	name = (char *)malloc(sizeof(char) * (msh_strlen(*tmp) + 1));
 	if (name == NULL)
@@ -108,23 +108,18 @@ static t_cmd	*msh_lstcmds(t_cmd *prev, t_input *init)
 {
 	t_cmd	*new;
 
-	printf("CHECK1\n");
 	new = (t_cmd *)malloc(sizeof(t_cmd));
 	if (new == NULL)
 		return (NULL);
-	printf("CHECK2\n");
 	new->name = msh_copy_name(init);
 	if (!new->name)
 		return (free(new), NULL);
-	printf("CHECK3\n");
 	new->argv = msh_copy_cmd(init);
 	if (!new->argv)
 		return (free(new->name), free(new), NULL);
-	printf("CHECK4\n");
 	new->envp = init->envp;
 	new->next = NULL;
 	new->prev = prev;
-	printf("CHECK5\n");
 	return (new);
 }
 
