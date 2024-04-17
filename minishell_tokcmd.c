@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 14:24:26 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 14:25:41 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -56,7 +56,7 @@
 static int	msh_check_double_pipes(t_input *init)
 {
 	if ((init->cmds && (init->cmds->name[0] == 124))
-		|| (init->i < msh_pipelen(init->pipelen)))
+		|| (init->i < msh_pipelen(init->pipeline)))
 	{
 		init->errquote = write(2, ERRPIPE, 42); 
 		init->exit_status = 2;
@@ -160,7 +160,7 @@ int	msh_tokcmd(t_input *init)
 			tmp = tmp->next;
 		}
 		if (!tmp || !msh_parsing(init->cmds, init))
-			return (msh_check_double_pipes(init);
+			return (msh_check_double_pipes(init));
 	}
 	tmp1 = init->cmds;
 	while (tmp1)
