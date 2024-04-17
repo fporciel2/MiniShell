@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/16 16:30:04 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 10:45:24 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -58,14 +58,24 @@ static char	**msh_copy_cmd(t_input *init)
 	char	**tmp;
 	char	**tmp1;
 	ssize_t	i;
-	ssize_t	j;
 
 	i = 0;
-	j = 0;
 	tmp = init->pipeline[init->i];
 	tmp++;
 	if (init->i != 0)
 		tmp++;
+	tmp1 = (char **)malloc(sizeof(char) * (msh_cmdlen(tmp) + 1));
+	if (tmp1 == NULL)
+		return (NULL);
+	while (tmp[i])
+	{
+		tmp1[i] = msh_strdup(tmp[i]);
+		if (tmp1[i] == NULL)
+			return (NULL);
+		i++;
+	}
+	tmp1[i] = NULL;
+	return (tmp1);
 }
 
 static char	*msh_copy_name(t_input *init)
