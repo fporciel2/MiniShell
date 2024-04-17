@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 10:45:24 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 11:01:50 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -61,9 +61,16 @@ static char	**msh_copy_cmd(t_input *init)
 
 	i = 0;
 	tmp = init->pipeline[init->i];
+	printf("%s\n", init->pipeline[init->i][0]);
+	printf("%s\n", init->pipeline[init->i][1]);
+	printf("%p\n", (void *)tmp);
 	tmp++;
-	if (init->i != 0)
+	if ((init->i != 0) && (init->pipeline[0][0][0] == 124))
 		tmp++;
+	printf("%p\n", (void *)tmp);
+	printf("%s\n", *tmp);
+	if (!tmp)
+		return (NULL);
 	tmp1 = (char **)malloc(sizeof(char) * (msh_cmdlen(tmp) + 1));
 	if (tmp1 == NULL)
 		return (NULL);
@@ -86,7 +93,7 @@ static char	*msh_copy_name(t_input *init)
 
 	i = 0;
 	tmp = init->pipeline[init->i];
-	if (init->i != 0)
+	if ((init->i != 0) && (init->pipeline[0][0][0] == 124))
 		tmp++;
 	name = (char *)malloc(sizeof(char) * (msh_strlen(*tmp) + 1));
 	if (name == NULL)
@@ -102,7 +109,7 @@ static char	*msh_copy_name(t_input *init)
 	return (name);
 }
 
-static t_cmd	*msh_lstcmds(t_cmd *prev, ssize_t cmdlen)
+static t_cmd	*msh_lstcmds(t_cmd *prev, t_input *init)
 {
 	t_cmd	*new;
 
@@ -129,19 +136,18 @@ int	msh_tokcmd(t_input *init)
 	init->cmds = NULL;
 	while (init->pipeline[++init->i])
 	{
-		init->cmdlen = msh_cmdlen(init->pipeline[init->i]);
 		if (!init->cmds)
 		{
-			tmp = msh_lstcmds(NULL, init->cmdlen, init);
+			tmp = msh_lstcmds(NULL, init);
 			init->cmds = tmp;
 		}
 		else
 		{
-			tmp->next = msh_lstcmds(tmp, init->cmdlen, init);
+			tmp->next = msh_lstcmds(tmp, init);
 			tmp = tmp->next;
 		}
 		tmp->envp = init->envp;
-		if (!tmp || msh_parsing(init->cmds, init))
+		if (!tmp/* || msh_parsing(init->cmds, init)*/)
 			return (0);
 	}
 	return (1);

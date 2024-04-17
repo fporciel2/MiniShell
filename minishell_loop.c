@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/30 09:25:24 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/16 14:45:54 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 10:47:05 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,7 +32,7 @@
 
 #include "minishell.h"
 
-static t_cmd	msh_clean_constr(t_cmd *cmds)
+static t_cmd	*msh_clean_constr(t_cmd *cmds)
 {
 	t_cmd	*tmp;
 	t_cmd	*tmp1;
