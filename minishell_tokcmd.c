@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 14:25:41 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 15:00:12 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -56,7 +56,8 @@
 static int	msh_check_double_pipes(t_input *init)
 {
 	if ((init->cmds && (init->cmds->name[0] == 124))
-		|| (init->i < msh_pipelen(init->pipeline)))
+		|| (init->i < msh_pipelen(init->pipeline))
+		|| (init->pipeline[0][0][0] == 124))
 	{
 		init->errquote = write(2, ERRPIPE, 42); 
 		init->exit_status = 2;
@@ -121,6 +122,8 @@ static t_cmd	*msh_lstcmds(t_cmd *prev, t_input *init)
 {
 	t_cmd	*new;
 
+	if ((init->i == 0) && (init->pipeline[0][0][0] == 124))
+		return (NULL);
 	new = (t_cmd *)malloc(sizeof(t_cmd));
 	if (new == NULL)
 		return (NULL);
@@ -140,7 +143,6 @@ static t_cmd	*msh_lstcmds(t_cmd *prev, t_input *init)
 int	msh_tokcmd(t_input *init)
 {
 	t_cmd	*tmp;
-	t_cmd	*tmp1;
 	
 	init->i = -1;
 	init->cmds = NULL;
@@ -150,30 +152,19 @@ int	msh_tokcmd(t_input *init)
 		if (!init->cmds)
 		{
 			tmp = msh_lstcmds(NULL, init);
-			tmp->envp = init->envp;
+			if (tmp)
+				tmp->envp = init->envp;
 			init->cmds = tmp;
 		}
 		else
 		{
 			tmp->next = msh_lstcmds(tmp, init);
-			tmp->envp = init->envp;
+			if (tmp->next)
+				tmp->next->envp = init->envp;
 			tmp = tmp->next;
 		}
-		if (!tmp || !msh_parsing(init->cmds, init))
+		if (!tmp)
 			return (msh_check_double_pipes(init));
-	}
-	tmp1 = init->cmds;
-	while (tmp1)
-	{
-		printf("COMMAND: %s\n\n", tmp1->name);
-		ssize_t	i = 0;
-		while (tmp1->argv[i])
-		{
-			printf("ARGUMENT: %s\n", tmp1->argv[i]);
-			i++;
-		}
-		printf("\n\n");
-		tmp1 = tmp1->next;
 	}
 	return (1);
 }
