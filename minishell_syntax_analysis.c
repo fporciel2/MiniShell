@@ -79,10 +79,16 @@ void	msh_cautiously_expand(t_cmd *head, t_input *init)
 		{
 			if (head->argv[init->i][i] == 36)
 				head->argv = msh_normal_expansion(head, init);
-			else if (head->argv[init->i][i] == 39)
-				head->argv = msh_abnormal_expansion(head, init);
+			else if (head->argv[init->i][i] == 34)
+				head->argv = msh_quoted_expansion(head, init);
 			else
-
+			{
+				i++;
+				while (head->argv[init->i][i] && (head->argv[init->i][i] != 39))
+					i++;
+				i++;
+				continue ;
+			}
 			if (init->err_xpand)
 				return ;
 			i = 0;
