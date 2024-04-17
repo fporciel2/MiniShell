@@ -32,6 +32,8 @@
 
 #include "minishell.h"
 
+
+
 int	msh_is_quoted(char *str)
 {
 	ssize_t	i;
@@ -82,13 +84,7 @@ void	msh_cautiously_expand(t_cmd *head, t_input *init)
 			else if (head->argv[init->i][i] == 34)
 				head->argv = msh_quoted_expansion(head, init);
 			else
-			{
-				i++;
-				while (head->argv[init->i][i] && (head->argv[init->i][i] != 39))
-					i++;
-				i++;
-				continue ;
-			}
+				msh_do_nothing(head, init);
 			if (init->err_xpand)
 				return ;
 			i = 0;
