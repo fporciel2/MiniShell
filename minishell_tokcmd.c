@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 12:01:40 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 12:20:13 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -108,28 +108,33 @@ static t_cmd	*msh_lstcmds(t_cmd *prev, t_input *init)
 {
 	t_cmd	*new;
 
+	printf("CHECK1\n");
 	new = (t_cmd *)malloc(sizeof(t_cmd));
 	if (new == NULL)
 		return (NULL);
+	printf("CHECK2\n");
 	new->name = msh_copy_name(init);
 	if (!new->name)
 		return (free(new), NULL);
+	printf("CHECK3\n");
 	new->argv = msh_copy_cmd(init);
 	if (!new->argv)
 		return (free(new->name), free(new), NULL);
+	printf("CHECK4\n");
 	new->envp = init->envp;
 	new->next = NULL;
 	new->prev = prev;
+	printf("CHECK5\n");
 	return (new);
 }
 
 int	msh_tokcmd(t_input *init)
 {
 	t_cmd	*tmp;
+	t_cmd	*tmp1;
 	
 	init->i = -1;
 	init->cmds = NULL;
-	ssize_t	i = 0;
 	tmp = NULL;
 	while (init->pipeline[++init->i])
 	{
@@ -146,6 +151,19 @@ int	msh_tokcmd(t_input *init)
 		tmp->envp = init->envp;
 		if (!tmp/* || msh_parsing(init->cmds, init)*/)
 			return (0);
+	}
+	tmp1 = init->cmds;
+	while (tmp1)
+	{
+		printf("COMMAND: %s\n\n", tmp1->name);
+		ssize_t	i = 0;
+		while (tmp1->argv[i])
+		{
+			printf("ARGUMENT: %s\n", tmp1->argv[i]);
+			i++;
+		}
+		printf("\n\n");
+		tmp1 = tmp1->next;
 	}
 	return (1);
 }
