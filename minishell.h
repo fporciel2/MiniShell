@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 18:03:44 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 18:28:16 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -177,8 +177,10 @@ int		msh_tokcmd(t_input *init);
 /*Syntax analysis and expansion.*/
 int		msh_parsing(t_cmd *head, t_input *init);
 int		msh_is_quoted(char *str);
-int		msh_is_in_quotes(char *str);
-int		msh_is_in_single_quotes(char *str);
+int		msh_is_in_quotes(char *str, ssize_t i);
+int		msh_is_in_single_quotes(char *str, ssize_t i);
+char	**msh_normal_exp(t_cmd *head, t_input *init);
+char	**msh_double_quotes_exp(t_cmd *head, t_input *init);
 /*Utils functions.*/
 ssize_t	msh_pipelen(char ***pipeline);
 ssize_t	msh_cmdlen(char **cmd);
