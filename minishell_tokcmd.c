@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/01 15:30:14 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/17 12:29:07 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/17 12:50:58 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -117,6 +117,7 @@ static t_cmd	*msh_lstcmds(t_cmd *prev, t_input *init)
 	new->argv = msh_copy_cmd(init);
 	if (!new->argv)
 		return (free(new->name), free(new), NULL);
+	new->argc = msh_cmdlen(new->argv);
 	new->envp = init->envp;
 	new->next = NULL;
 	new->prev = prev;
