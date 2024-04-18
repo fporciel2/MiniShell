@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 18:29:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 07:15:15 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/18 07:16:18 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -35,7 +35,7 @@
 char	**msh_double_quotes_exp(t_cmd *head, t_input *init, ssize_t i)
 {
 	if (msh_is_env(head->argv[init->i], i, head->envp))
-		head->argv = msh_inquote_exp(head, init, head->argv[init->i], i);
+		head->argv = msh_expand_env(head, init, head->argv[init->i], i);
 	return (head->argv);
 }
 
