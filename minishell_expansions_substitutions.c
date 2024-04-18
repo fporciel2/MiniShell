@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 07:23:41 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 08:11:37 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/18 08:32:44 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,6 +32,23 @@
 
 #include "minishell.h"
 
+static char	**msh_expand_env1(t_cmd *head, t_input *init, char *str, ssize_t i)
+{
+	while (head->envp[head->env_num][head->start_path])
+	{
+		head->subst = msh_new_char(head->subst,
+				head->envp[head->env_num][head->start_path++]);
+		if (head->subst == NULL)
+			return (msh_interrupt_expansion(init, str), NULL);
+	}
+	while (str[post_path])
+	{
+		head->subst = msh_new_char(head->subst, str[post_path++]);
+		if (head->subst == NULL)
+			return (msh_interrupt_expansion(init, str), NULL);
+	}
+}
+
 char	**msh_expand_env(t_cmd *head, t_input *init, char *str, ssize_t i)
 {
 	head->env_num = msh_is_env(str, i, head->envp);
@@ -41,8 +58,9 @@ char	**msh_expand_env(t_cmd *head, t_input *init, char *str, ssize_t i)
 	head->subst = NULL;
 	while (head->pre_i != i)
 	{
-		head->subst = msh_new_char(head->subst, str[head->pre_i]);
+		head->subst = msh_new_char(head->subst, str[head->pre_i++]);
 		if (head->subst == NULL)
 			return (msh_interrupt_expansion(init, str), NULL);
 	}
+	return (msh_expand_env1(t_cmd *head, t_input *init, char *str, ssize_t i));
 }
