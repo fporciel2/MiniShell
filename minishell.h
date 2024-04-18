@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 12:26:36 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:19:03 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -190,7 +190,6 @@ ssize_t	msh_is_env(char *str, ssize_t i, char **envp);
 ssize_t	msh_is_exp(char *str, ssize_t i);
 char	**msh_expand_env(t_cmd *head, t_input *init, char *str, ssize_t i);
 char	**msh_remove_constr(t_cmd *head, t_input *init, char *str, ssize_t i);
-char	**msh_remove_dollar(t_cmd *head, t_input *init, char *str, ssize_t i);
 void	msh_interrupt_expansion(t_input *init, char *str);
 ssize_t	msh_get_path_index(char *env);
 ssize_t	msh_get_post_path(char *str, ssize_t i);
