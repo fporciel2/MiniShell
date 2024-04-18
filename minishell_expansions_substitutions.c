@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 07:23:41 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 08:37:57 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/18 08:44:31 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,6 +32,14 @@
 
 #include "minishell.h"
 
+static char	**msh_expand_env2(t_cmd *head, t_input *init)
+{
+	ssize_t	i;
+
+	i = 0;
+	head->exp = (char **)malloc(sizeof(char *) * (msh_cmdlen(head->argv) + 1));
+}
+
 static char	**msh_expand_env1(t_cmd *head, t_input *init, char *str, ssize_t i)
 {
 	while (head->envp[head->env_num][head->start_path])
@@ -39,15 +47,15 @@ static char	**msh_expand_env1(t_cmd *head, t_input *init, char *str, ssize_t i)
 		head->subst = msh_new_char(head->subst,
 				head->envp[head->env_num][head->start_path++]);
 		if (head->subst == NULL)
-			return (msh_interrupt_expansion(init, str), NULL);
+			return (msh_interrupt_expansion(init, NULL), NULL);
 	}
 	while (str[post_path])
 	{
 		head->subst = msh_new_char(head->subst, str[post_path++]);
 		if (head->subst == NULL)
-			return (msh_interrupt_expansion(init, str), NULL);
+			return (msh_interrupt_expansion(init, NULL), NULL);
 	}
-	return (msh_expand_env3(t_cmd *head, t_input *init, char *str, ssize_t i));
+	return (msh_expand_env2(t_cmd *head, t_input *init));
 }
 
 char	**msh_expand_env(t_cmd *head, t_input *init, char *str, ssize_t i)
@@ -61,7 +69,7 @@ char	**msh_expand_env(t_cmd *head, t_input *init, char *str, ssize_t i)
 	{
 		head->subst = msh_new_char(head->subst, str[head->pre_i++]);
 		if (head->subst == NULL)
-			return (msh_interrupt_expansion(init, str), NULL);
+			return (msh_interrupt_expansion(init, NULL), NULL);
 	}
 	return (msh_expand_env1(t_cmd *head, t_input *init, char *str, ssize_t i));
 }
