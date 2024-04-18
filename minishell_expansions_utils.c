@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_expansions.c                             :+:      :+:    :+:   */
+/*   minishell_expansions_utils.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/17 18:29:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 07:02:44 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/18 06:42:46 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/18 07:02:31 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,23 +32,29 @@
 
 #include "minishell.h"
 
-char	**msh_double_quotes_exp(t_cmd *head, t_input *init, ssize_t i)
+ssize_t	msh_is_env(char *str, ssize_t i, char **envp)
 {
-	if (msh_is_env(head->argv[init->i], i, head->envp))
-		head->argv = msh_inquote_exp(head, init, head->argv[init->i], i);
-	return (head->argv);
-}
+	ssize_t	j;
+	ssize_t	k;
+	ssize_t	l;
 
-char	**msh_normal_exp(t_cmd *head, t_input *init)
-{
-	ssize_t	i;
-
-	i = 0;
-	while (head->argv[init->i][i] && (head->argv[init->i][i] != 36))
-		i++;
-	if (msh_is_env(head->argv[init->i], i, head->envp))
-		head->argv = msh_expand_env(head, init, head->argv[init->i], i);
-	else
-		head->argv = msh_remove_dollar(head, init, head->argv[init->i], i);
-	return (head->argv);
+	j = 0;
+	if (!envp)
+		return (0);
+	while (envp[j])
+	{
+		k = (i + 1);
+		l = 0;
+		while (str[k] && envp[j][l] && (str[k] == envp[j][l])
+				&& (envp[j][l] != 61) && (str[k] != 34) && (str[k] != 39)
+				&& (str[k] > 32))
+		{
+			k++;
+			l++;
+		}
+		if (envp[j][l] == 61)
+			return (j);
+		j++;
+	}
+	return (0);
 }
