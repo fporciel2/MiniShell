@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 07:33:46 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/18 07:47:44 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -128,6 +128,10 @@ typedef struct s_cmd
 	char			**envp;
 	char			**exp;
 	char			*subst;
+	ssize_t			env_num;
+	ssize_t			pre_i;
+	ssize_t			post_path;
+	ssize_t			start_path;
 	int				argc;
 	int				pipe;
 	int				heredoc;
