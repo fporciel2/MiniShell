@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 12:45:49 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 06:32:50 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/18 07:35:26 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* ´MiniShell´ is a simple shell for Debian GNU/Linux.
@@ -58,7 +58,7 @@ static void	msh_perform_expansion(t_cmd *head, t_input *init)
 		if (head->argv[init->i][i] == 36)
 		{
 			head->argv = msh_normal_exp(head, init);
-			if (init->err_xpand)
+			if (!init->err_xpand)
 				return ;
 			i = 0;
 			continue ;
@@ -85,7 +85,7 @@ static void	msh_cautiously_expand(t_cmd *head, t_input *init)
 				i++;
 				continue ;
 			}
-			if (init->err_xpand)
+			if (!init->err_xpand)
 				return ;
 			i = 0;
 			continue ;

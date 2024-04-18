@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 07:30:46 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/18 07:33:46 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -186,6 +186,7 @@ ssize_t	msh_is_exp(char *str, ssize_t i);
 char	**msh_expand_env(t_cmd *head, t_input *init, char *str, ssize_t i);
 char	**msh_remove_constr(t_cmd *head, t_input *init, char *str, ssize_t i);
 char	**msh_remove_dollar(t_cmd *head, t_input *init, char *str, ssize_t i);
+void	msh_interrupt_expansion(t_input *init);
 /*Utils functions.*/
 ssize_t	msh_pipelen(char ***pipeline);
 ssize_t	msh_cmdlen(char **cmd);
