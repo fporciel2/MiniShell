@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 15:19:03 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:28:37 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -184,15 +184,6 @@ int		msh_parsing(t_cmd *head, t_input *init);
 int		msh_is_quoted(char *str);
 int		msh_is_in_quotes(char *str, ssize_t i);
 int		msh_is_in_single_quotes(char *str, ssize_t i);
-char	**msh_normal_exp(t_cmd *head, t_input *init);
-char	**msh_double_quotes_exp(t_cmd *head, t_input *init, ssize_t i);
-ssize_t	msh_is_env(char *str, ssize_t i, char **envp);
-ssize_t	msh_is_exp(char *str, ssize_t i);
-char	**msh_expand_env(t_cmd *head, t_input *init, char *str, ssize_t i);
-char	**msh_remove_constr(t_cmd *head, t_input *init, char *str, ssize_t i);
-void	msh_interrupt_expansion(t_input *init, char *str);
-ssize_t	msh_get_path_index(char *env);
-ssize_t	msh_get_post_path(char *str, ssize_t i);
 /*Utils functions.*/
 ssize_t	msh_pipelen(char ***pipeline);
 ssize_t	msh_cmdlen(char **cmd);
