@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 07:23:41 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 08:44:31 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/18 10:28:41 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,12 +32,28 @@
 
 #include "minishell.h"
 
-static char	**msh_expand_env2(t_cmd *head, t_input *init)
+static char	**msh_expand_env2(t_cmd *head, t_input *init, char *str)
 {
 	ssize_t	i;
 
 	i = 0;
 	head->exp = (char **)malloc(sizeof(char *) * (msh_cmdlen(head->argv) + 1));
+	if (head->exp == NULL)
+		return (msh_interrupt_expansion(init, head->subst), NULL);
+	while (i != head->env_num)
+	{
+		head->exp[i] = msh_strdup(head->argv[i]);
+		if (head->exp[i] == NULL)
+			return (msh_clean_cmd(head->exp),
+					msh_interrupt_expansion(init, head->subst), NULL);
+		i++;
+	}
+	head->exp[i] = msh_strdup(head->subst);
+	if (head->exp[i] == NULL)
+		return (msh_clean_cmd(head->exp),
+				msh_interrupt_expansion(init, head->subst), NULL);
+	free(head->subst);
+	return (head->argv);
 }
 
 static char	**msh_expand_env1(t_cmd *head, t_input *init, char *str, ssize_t i)
@@ -55,7 +71,7 @@ static char	**msh_expand_env1(t_cmd *head, t_input *init, char *str, ssize_t i)
 		if (head->subst == NULL)
 			return (msh_interrupt_expansion(init, NULL), NULL);
 	}
-	return (msh_expand_env2(t_cmd *head, t_input *init));
+	return (msh_expand_env2(t_cmd *head, t_input *init, char *str));
 }
 
 char	**msh_expand_env(t_cmd *head, t_input *init, char *str, ssize_t i)
