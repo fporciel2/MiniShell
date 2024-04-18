@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/17 18:29:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 07:31:54 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/18 15:13:35 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -52,7 +52,5 @@ char	**msh_normal_exp(t_cmd *head, t_input *init)
 		head->argv = msh_expand_env(head, init, head->argv[init->i], i);
 	else if (msh_is_exp(head->argv[init->i], i))
 		head->argv = msh_remove_constr(head, init, head->argv[init->i], i);
-	else
-		head->argv = msh_remove_dollar(head, init, head->argv[init->i], i);
 	return (head->argv);
 }
