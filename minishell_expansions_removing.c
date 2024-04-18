@@ -1,15 +1,15 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_expansions_removing.c                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
+/*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/30 06:17:49 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 12:25:31 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/18 10:35:33 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/18 11:15:58 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-/* `MiniShell` is a simple shell for Debian GNU/Linux.
+/* ´MiniShell´ is a simple shell for Debian GNU/Linux.
  * Copyright (C) 2024 Federico Porciello
  * 
  * This program is free software: you can redistribute it and/or modify
@@ -32,23 +32,4 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
-{
-	t_input	*init;
-	int		exit_minishell;
-
-	if (argc != 1)
-	{
-		errno = write(2, "Do not use arguments if you want to live!\n", 42);
-		return (errno);
-	}
-	init = (t_input *)malloc(sizeof(t_input));
-	if (!init)
-		return (perror("Error"), errno);
-	init->prompt = argv[0];
-	if (!msh_get_envp(envp, init))
-		return (free(init), perror("Error"), errno);
-	msh_set_signals(init);
-	exit_minishell = msh_loop(init);
-	return (exit_minishell);
-}
+char	**msh_remove_constr(

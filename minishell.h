@@ -6,7 +6,7 @@
 /*   By: fporciel <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 11:19:53 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/18 08:12:57 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/18 12:26:36 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -159,6 +159,7 @@ typedef struct s_input
 	int				err_xpand;
 	int				pipe;
 	int				space_flag;
+	int				exit_minishell;
 	unsigned char	exit_status;
 }					t_input;
 
@@ -170,7 +171,7 @@ void	msh_set_signals(t_input *init);
 void	msh_handle_sigint(int sig);
 void	msh_handle_sigquit(int sig);
 /*Loop functions.*/
-void	msh_loop(t_input *init);
+int		msh_loop(t_input *init);
 /*Tokenization.*/
 int		msh_strtok(t_input *init);
 char	***msh_append_command(t_input *init);
