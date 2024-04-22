@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_loop.c                                   :+:      :+:    :+:   */
+/*   minishell_strtok.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 07:59:49 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 10:24:15 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/22 10:19:59 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/22 10:27:38 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,29 +32,9 @@
 
 #include "minishell.h"
 
-int	msh_loop(t_input *init)
+int	msh_strtok(t_input *init)
 {
-	int	exit_status;
-
-	exit_status = 0;
-	msh_init(init);
-	while (42)
-	{
-		msh_memset(init);
-		init->line = readline("MiniShell> ");
-		if (!init->line)
-		{
-			exit_status = init->exit_flag;
-			init->i = write(1, "exit\n", 5);
-			msh_clean_init(&init);
-			break ;
-		}
-		else if (*init->line)
-			add_history(init->line);
-		else
-			continue ;
-		if (!msh_strtok(init))
-			continue ;
-	}
-	return (exit_status);
+	if (!init->line || !*init->line)
+		return (0);
+	init->i = 0;
 }
