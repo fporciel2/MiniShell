@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 06:32:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 07:41:32 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/22 07:51:53 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -96,5 +96,8 @@ int		msh_matdel(char ***matrix);
 char	*msh_strdup(char *str);
 ssize_t	msh_strlen(char *str);
 char	*msh_strcpy(char *dest, char *src);
+/* SIGNAL */
+int		msh_set_signals(void);
+void	msh_handle_sigint(int sig);
 
 #endif
