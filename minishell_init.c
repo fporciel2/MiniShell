@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_loop.c                                   :+:      :+:    :+:   */
+/*   minishell_init.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 07:59:49 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 08:20:32 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/22 08:17:21 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/22 08:25:20 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,32 +32,26 @@
 
 #include "minishell.h"
 
-int	msh_loop(t_input *init)
+void	msh_init(t_input *init)
 {
-	int	exit_status;
+	init->cmds = NULL;
+	init->toks = NULL;
+	init->line = NULL;
+	init->i = 0;
+	init->exit_flag = 0;
+	init->exit_status = 0;
+}
 
-	exit_status = 0;
+void	msh_memset(t_input *init)
+{
+	if (init->line)
+		free(init->line);
 	msh_init(init);
-	while (42)
-	{
-		msh_memset(init);
-		init->line = readline("MiniShell> ");
-		if (!init->line)
-		{
-			exit_status = init->exit_flag;
-			init->i = write(1, "exit\n", 5);
-			msh_clean_init(init);
-			break ;
-		}
-		else if (*init->line)
-			add_history(init->line);
-		else
-			continue ;
-		if (printf("line: %s\n", init->line) < 0)
-		{
-			msh_clean_init(&init);
-			break ;
-		}
-	}
-	return (exit_status);
+}
+
+void	msh_clean_init(t_input **init)
+{
+	msh_memset(*init);
+	(void)msh_matdel(&(*init)->envp);
+	free(*init);
 }
