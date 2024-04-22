@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 07:13:28 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 07:21:08 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/22 07:28:43 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,11 +32,40 @@
 
 #include "minishell.h"
 
+ssize_t	msh_matlen(char **matrix)
+{
+	ssize_t	i;
+
+	if (!matrix || !*matrix)
+		return (0);
+	i = 0;
+	while (matrix[i])
+		i++;
+	return (i);
+}
+
+int	msh_matdel(char ***matrix)
+{
+	ssize_t	i;
+
+	if (!matrix || !*matrix || !**matrix)
+		return (0);
+	i = 0;
+	while ((*matrix)[i])
+		i++;
+	i--;
+	while (i >= 0)
+		free((*matrix)[i--]);
+	free(*matrix);
+	*matrix = NULL;
+	return (0);
+}
+
 int	msh_get_matrix(char **source, char ***dest)
 {
 	ssize_t	i;
 
-	if (!source || !*source)
+	if (!source || !*source || !dest)
 		return (0);
 	*dest = (char **)malloc(sizeof(char *) * (msh_matlen(source) + 1));
 	if (!*dest)
@@ -46,7 +75,7 @@ int	msh_get_matrix(char **source, char ***dest)
 	{
 		(*dest)[i] = msh_strdup(source[i]);
 		if (!(*dest)[i])
-			return (msh_matdel(dest), 0);
+			return (msh_matdel(dest));
 		i++;
 	}
 	(*dest)[i] = NULL;
