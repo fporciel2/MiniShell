@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 06:32:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 06:58:58 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/22 07:15:56 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -87,5 +87,12 @@ typedef struct s_input
 	int				exit_flag;
 	unsigned char	exit_status;
 }					t_input;
+
+/* MATRIX */
+int		msh_get_matrix(char **source, char ***dest);
+ssize_t	msh_matlen(char **matrix);
+int		msh_matdel(char ***matrix);
+/* STRING */
+char	*msh_strdup(char *str);
 
 #endif
