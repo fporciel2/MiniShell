@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 06:32:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 07:51:53 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/22 07:56:13 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -99,5 +99,7 @@ char	*msh_strcpy(char *dest, char *src);
 /* SIGNAL */
 int		msh_set_signals(void);
 void	msh_handle_sigint(int sig);
+/* LOOP */
+int		msh_loop(t_input *init);
 
 #endif

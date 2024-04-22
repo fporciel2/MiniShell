@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_loop.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 06:49:29 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 07:59:19 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/22 07:59:49 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/22 08:01:25 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,27 +32,7 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	msh_loop(t_input *init)
 {
-	t_input	*init;
-
-	ssize_t	i = 0;
-	printf("ENVP:\n\n");
-	while (envp && envp[i])
-		printf("%s\n", envp[i++]);
-	if (argc != 1)
-		return ((int)write(2, "Arguments not supported yet.\n", 29));
-	init = (t_input *)malloc(sizeof(t_input));
-	if (!init)
-		return (perror("Error"), errno);
-	init->prompt = argv[0];
-	if (!msh_get_matrix(envp, &init->envp))
-		return (perror("Error"), free(init), errno);
-	if (!msh_set_signals())
-		return (msh_matdel(&init->envp), free(init), errno);
-	i = 0;
-	printf("\n\n\nENVP_COPY:\n\n");
-	while (init->envp && init->envp[i])
-		printf("%s\n", init->envp[i++]);
-	return (msh_loop(init));
+	return (msh_matdel(&init->envp), free(init), 0);
 }
