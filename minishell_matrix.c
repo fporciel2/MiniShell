@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 07:13:28 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 07:14:55 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/22 07:21:08 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -34,4 +34,21 @@
 
 int	msh_get_matrix(char **source, char ***dest)
 {
+	ssize_t	i;
+
+	if (!source || !*source)
+		return (0);
+	*dest = (char **)malloc(sizeof(char *) * (msh_matlen(source) + 1));
+	if (!*dest)
+		return (0);
+	i = 0;
+	while (source[i])
+	{
+		(*dest)[i] = msh_strdup(source[i]);
+		if (!(*dest)[i])
+			return (msh_matdel(dest), 0);
+		i++;
+	}
+	(*dest)[i] = NULL;
+	return (1);
 }
