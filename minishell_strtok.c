@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 10:19:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 06:32:09 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 06:35:49 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -31,6 +31,17 @@
  */
 
 #include "minishell.h"
+
+static void	msh_slide_delimiters(t_input *init)
+{
+	if (init->i == 0)
+		init->space = 1;
+	else
+		init->space = 0;
+	while (init->line[init->i] && (init->line[init->i] <= 32))
+		init->i++;
+	init->i--;
+}
 
 static int	msh_redirtok(t_input *init)
 {
