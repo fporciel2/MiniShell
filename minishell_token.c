@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 06:36:39 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 07:03:19 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 07:10:14 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,6 +32,21 @@
 
 #include "minishell.h"
 
+static void	msh_copy_strtok(t_input *init, t_tok *tmp, char **str)
+{
+	if (tmp->str)
+	{
+		while (tmp->str[init->j])
+		{
+			(*str)[init->j] = tmp->str[init->j];
+			init->j++;
+		}
+	}
+	(*str)[init->j] = init->line[init->i];
+	(*str)[init->j + 1] = 0;
+}
+
+
 int	msh_new_char(t_input *init)
 {
 	t_tok	*tmp;
@@ -49,10 +64,7 @@ int	msh_new_char(t_input *init)
 		str = (char *)malloc(sizeof(char) * 2);
 	if (!str)
 		return (perror("Error"), 1);
-	while (tmp->str && tmp->str[init->j])
-		str[init->j++] = tmp->str[init->j];
-	str[init->j++] = init->line[init->i];
-	str[init->j] = 0;
+	msh_copy_strtok(init, tmp, &str);
 	free(tmp->str);
 	tmp->str = str;
 	return (0);
