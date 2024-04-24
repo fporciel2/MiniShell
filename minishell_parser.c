@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 08:30:37 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 09:47:03 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 09:52:47 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -55,7 +55,7 @@ int	msh_parser(t_input *init)
 	tmp = init->toks;
 	if (!tmp || !tmp->str || (tmp->str[0] == 124))
 		return (write(2, "Syntax error: wrong token\n", 26), 0);
-	while (tmp)
+	while (tmp && !init->errtok)
 	{
 		if (tmp != init->toks)
 			tmp = tmp->next;

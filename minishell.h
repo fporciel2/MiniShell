@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 06:32:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 09:47:41 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 09:56:21 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -113,6 +113,7 @@ int		msh_loop(t_input *init);
 void	msh_init(t_input *init);
 void	msh_memset(t_input *init);
 void	msh_clean_init(t_input **init);
+void	msh_clean_pipeline(t_input *init);
 /* STRTOK */
 int		msh_strtok(t_input *init);
 /* TOKEN */

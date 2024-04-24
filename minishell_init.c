@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 08:17:21 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 07:32:32 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 09:58:56 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,6 +32,21 @@
 
 #include "minishell.h"
 
+void	msh_clean_pipeline(t_input *init)
+{
+	if (init->cmds)
+	{
+		while (init->cmds)
+		{
+			if (init->cmds->name)
+				free(init->cmds->name);
+			if (init->cmds->args)
+				init->cmds->args = msh_matdel(init->cmds->args);
+			init->cmds = init->cmds->next;
+		}
+	}
+}
+
 void	msh_init(t_input *init)
 {
 	init->cmds = NULL;
@@ -53,6 +68,7 @@ void	msh_memset(t_input *init)
 
 	if (init->line)
 		free(init->line);
+	msh_clean_pipeline(init);
 	if (init->toks)
 	{
 		tmp = init->toks;
