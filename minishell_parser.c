@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 08:30:37 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 09:23:04 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 09:30:42 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,8 +32,12 @@
 
 #include "minishell.h"
 
-int	msh_check_pipe(t_input *init)
+int	msh_check_pipe(t_cmd *cmd)
 {
+	if (!cmd->prev || !cmd->next || (cmd->prev->type == 1)
+		|| (cmd->next->type == 1))
+		return (write(2, "Syntax error: wrong pipe\n", 25), 1);
+	return (0);
 }
 
 int	msh_parser(t_input *init)
@@ -74,5 +78,7 @@ int	msh_parser(t_input *init)
 			tmp1 = tmp1->next;
 		}
 	}
-	return (init->errtok);
+	if (init->errtok)
+		return (write(1, "\n0 EXIT\n", 8), 0);
+	return (write(1, "\n1 EXIT\n", 8), 1);
 }
