@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 08:30:37 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 17:32:35 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 17:46:31 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -60,7 +60,7 @@ int	msh_parser(t_input *init)
 		if (!tmp)
 			break ;
 		if (tmp->type == 1)
-			init->errtok = msh_new_pipe(tmp);
+			init->errtok = msh_check_pipe(tmp);
 		else if (tmp->type == 2)
 			init->errtok = msh_new_redir(init, tmp);
 		else if ((tmp->prev && (tmp->prev->type == 1)) || (tmp == init->toks))
@@ -76,7 +76,7 @@ int	msh_parser(t_input *init)
 		{
 			printf("CMD: %s %d\n\n", tmp1->name, tmp1->redir);
 			ssize_t	i = 0;
-			while (tmp1->argv[i])
+			while (tmp1->argv && tmp1->argv[i])
 				printf("ARG: %s\n", tmp1->argv[i++]);
 			printf("\n\n");
 			tmp1 = tmp1->next;
