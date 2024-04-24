@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 09:41:16 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 12:18:20 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:23:39 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,7 +32,7 @@
 
 #include "minishell.h"
 
-int	msh_new_command(t_input *init, t_tok *tok)
+int	msh_new_cmd(t_input *init, t_tok *tok)
 {
 	t_cmd	*new;
 	t_cmd	*tmp;
@@ -63,6 +63,7 @@ static int	msh_arg_setting2(t_input *init, t_tok *tok, t_cmd *cmd)
 	char	**new;
 	ssize_t	i;
 
+	(void)init;
 	new = (char **)malloc(sizeof(char *) * (msh_matlen(cmd->argv) + 1));
 	if (!new)
 		return (perror("Error"), 1);
@@ -112,12 +113,12 @@ int	msh_new_arg(t_input *init, t_tok *tok)
 
 	tmp = init->cmds;
 	if (!tmp)
-		return (msh_new_command(init, tok));
+		return (msh_new_cmd(init, tok));
 	while (tmp->next)
 		tmp = tmp->next;
 	if (!tmp->name)
 	{
-		if (msh_new_command(init, tok))
+		if (msh_new_cmd(init, tok))
 			return (1);
 	}
 	return (msh_arg_setting(init, tok, tmp));
@@ -132,7 +133,7 @@ int	msh_new_redir(t_input *init, t_tok *tok)
 	tmp = init->cmds;
 	if ((tok->prev && tok->prev->type == 1) || (!tok->prev))
 	{
-		if (msh_new_command(init, tok))
+		if (msh_new_cmd(init, tok))
 			return (1);
 		while (tmp->next)
 			tmp = tmp->next;
