@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 06:36:39 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 06:46:07 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 06:49:01 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -48,6 +48,32 @@ static int	msh_first_token(t_input *init)
 	init->toks->index = 0;
 	init->toks->next = NULL;
 	init->toks->prev = NULL;
+	return (msh_new_char(init));
+}
+
+static int	msh_next_token(t_input *init)
+{
+	t_tok	*tmp;
+	t_tok	*new;
+
+	tmp = init->toks;
+	new = (t_tok *)malloc(sizeof(t_tok));
+	if (!new)
+		return (perror("Error"), 1);
+	if (init->line[init->i] == 124)
+		new->type = 1;
+	else if ((init->line[init->i] == 60) || (init->line[init->i] == 62))
+		new->type = 2;
+	else if ((init->line[init->i] == 34) || (init->line[init->i] == 39))
+		new->type = 3;
+	else
+		new->type = 0;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+	new->prev = tmp;
+	new->next = NULL;
+	new->index = tmp->index + 1;
 	return (msh_new_char(init));
 }
 
