@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 06:32:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 07:33:10 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 08:23:25 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -117,5 +117,7 @@ int		msh_strtok(t_input *init);
 /* TOKEN */
 int		msh_new_token(t_input *init);
 int		msh_new_char(t_input *init);
+/* PARSER */
+int		msh_parser(t_input *init);
 
 #endif

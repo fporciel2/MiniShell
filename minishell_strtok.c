@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 10:19:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 08:19:40 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 08:22:38 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -122,14 +122,5 @@ int	msh_strtok(t_input *init)
 	}
 	if (!init->errquote)
 		return (write(2, "Syntax error: unclosed quotes\n", 30), 0);
-	if (init->toks)
-	{
-		t_tok	*tmp = init->toks;
-		while (tmp)
-		{
-			printf("%s\n", tmp->str);
-			tmp = tmp->next;
-		}
-	}
-	return (/*msh_parser(init)*/0);
+	return (msh_parser(init));
 }

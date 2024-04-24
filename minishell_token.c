@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 06:36:39 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 07:56:53 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 08:25:13 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -45,7 +45,6 @@ static void	msh_copy_strtok(t_input *init, t_tok *tmp, char **str)
 	(*str)[init->j] = init->line[init->i];
 	(*str)[init->j + 1] = 0;
 }
-
 
 int	msh_new_char(t_input *init)
 {
