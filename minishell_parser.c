@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 08:30:37 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 09:44:05 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 09:47:03 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,18 +32,18 @@
 
 #include "minishell.h"
 
-int	msh_check_pipe(t_cmd *cmd)
+int	msh_check_pipe(t_tok *tok)
 {
-	if (!cmd->prev || !cmd->next || (cmd->prev->type == 1)
-		|| (cmd->next->type == 1))
+	if (!tok->prev || !tok->next || (tok->prev->type == 1)
+		|| (tok->next->type == 1))
 		return (write(2, "Syntax error: wrong pipe\n", 25), 1);
 	return (0);
 }
 
-int	msh_check_redir(t_cmd *cmd)
+int	msh_check_redir(t_tok *tok)
 {
-	if ((!cmd->prev && !cmd->next) || (cmd->prev && (cmd->prev->type == 2))
-		|| (cmd->next && ((cmd->next->type == 2) || (cmd->next->type == 1))))
+	if ((!tok->prev && !tok->next) || (tok->prev && (tok->prev->type == 2))
+		|| (tok->next && ((tok->next->type == 2) || (tok->next->type == 1))))
 		return (write(2, "Syntax error: wrong redirection\n", 32), 1);
 	return (0);
 }
