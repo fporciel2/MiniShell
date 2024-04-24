@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 10:19:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 05:53:38 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 06:10:04 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,6 +32,31 @@
 
 #include "minishell.h"
 
+static int	msh_quoting(t_input *init)
+{
+	char	quote;
+
+	quote = init->line[init->i];
+	if (init->i && (init->line[init->i - 1] <= 32) && init->line[init->i - 1])
+		init->pipe = msh_new_token(init);
+	else
+		init->pipe = msh_new_char(init);
+	init->errquote = 0;
+	init->i++;
+	while (!init->errtok && init->line[init->i] && init->line[init->i] != quote)
+	{
+		init->pipe = msh_new_char(init);
+		if (init->errtok)
+			return (perror("Error"), 0);
+		init->i++;
+	}
+	if (init->errtok || !init->line[init->i])
+		return (0);
+	else
+		init->errtok = msh_new_char(init);
+	return (1);
+}
+
 int	msh_strtok(t_input *init)
 {
 	if (!init->line || !*init->line)
@@ -54,6 +79,15 @@ int	msh_strtok(t_input *init)
 			init->i++;
 	}
 	if (!init->errquote)
-		return (init->errquote);
+		return (write(2, "Syntax error: unclosed quotes\n", 30), 0);
+	if (init->toks)
+	{
+		t_tok	*tmp = init->toks;
+		while (tmp)
+		{
+			printf("%s\n", tmp->str);
+			tmp = tmp->next;
+		}
+	}
 	return (/*msh_parser(init)*/0);
 }
