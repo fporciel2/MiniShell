@@ -1,0 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell_parser.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/04/24 08:30:37 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/24 09:12:16 by fporciel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+/* `MiniShell` is a simple shell for Debian GNU/Linux.
+ * Copyright (C) 2024 Federico Porciello
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * 
+ * For more information on how to contact me by electronic and paper mail
+ * please see:
+ * https://github.com/fporciel2/MiniShell
+ */
+
+#include "minishell.h"
+
+int	msh_parser(t_input *init)
+{
+	t_tok	*tmp;
+
+	tmp = init->toks;
+	if (!tmp || !tmp->str || (tmp->str[0] == 124))
+		return (write(2, "Syntax error: wrong token\n", 26), 0);
+	while (tmp)
+	{
+		if (tmp != init->toks)
+			tmp = tmp->next;
+		if (!tmp)
+			break ;
+		if (tmp->type == 1)
+			init->errtok = msh_check_pipe(init);
+		else if (tmp->type == 2)
+			init->errtok = msh_check_redir(init);
+		else if ((tmp->prev && (tmp->prev->type == 1)) || (tmp == init->toks))
+			init->errtok = msh_new_cmd(init);
+		else if ((tmp->prev && (tmp->prev->type == 2))
+				|| (tmp->next && (tmp->next->type == 2)))
+			init->errtok = msh_new_redir(init);
+		else
+			init->errtok = msh_new_arg(init);
+	}
+	return (init->errtok);
+}

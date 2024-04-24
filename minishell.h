@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 06:32:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 08:23:25 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 09:09:00 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -60,6 +60,7 @@ typedef struct s_cmd
 	char			*name;
 	char			**argv;
 	char			**envp;
+	int				redir;
 	int				argc;
 	int				fdin;
 	int				fdout;
