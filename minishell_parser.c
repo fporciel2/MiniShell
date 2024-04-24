@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 08:30:37 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 12:26:44 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:28:51 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -36,7 +36,7 @@ int	msh_check_pipe(t_tok *tok)
 {
 	if (!tok->prev || !tok->next || (tok->prev->type == 1)
 		|| (tok->next->type == 1))
-		return ((void)write(2, "Syntax error: wrong pipe\n", 25), 1);
+		return ((int)write(2, "Syntax error: wrong pipe\n", 25), 1);
 	return (0);
 }
 
@@ -44,7 +44,7 @@ int	msh_check_redir(t_tok *tok)
 {
 	if ((!tok->prev && !tok->next) || (tok->prev && (tok->prev->type == 2))
 		|| (tok->next && ((tok->next->type == 2) || (tok->next->type == 1))))
-		return ((void)write(2, "Syntax error: wrong redirection\n", 32), 1);
+		return ((int)write(2, "Syntax error: wrong redirection\n", 32), 1);
 	return (0);
 }
 
@@ -54,7 +54,7 @@ int	msh_parser(t_input *init)
 
 	tmp = init->toks;
 	if (!tmp || !tmp->str || (tmp->str[0] == 124))
-		return ((void)write(2, "Syntax error: wrong token\n", 26), 0);
+		return ((int)write(2, "Syntax error: wrong token\n", 26), 0);
 	while (tmp && !init->errtok)
 	{
 		if (tmp != init->toks)
@@ -84,6 +84,6 @@ int	msh_parser(t_input *init)
 		}
 	}
 	if (init->errtok)
-		return ((void)write(1, "\n0 EXIT\n", 8), 0);
-	return ((void)write(1, "\n1 EXIT\n", 8), 1);
+		return ((int)write(1, "\n0 EXIT\n", 8), 0);
+	return ((int)write(1, "\n1 EXIT\n", 8), 1);
 }
