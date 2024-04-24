@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 06:32:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 10:25:30 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 04:43:12 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -84,6 +84,8 @@ typedef struct s_input
 	char			*line;
 	char			*prompt;
 	ssize_t			i;
+	int				errquote;
+	int				heredoc;
 	int				exit_flag;
 	unsigned char	exit_status;
 }					t_input;
