@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 06:36:39 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 07:15:45 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 07:23:34 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -109,7 +109,7 @@ static int	msh_next_token(t_input *init)
 		new->type = 0;
 	while (tmp->next)
 		tmp = tmp->next;
-	tmp->str = NULL;
+	new->str = NULL;
 	tmp->next = new;
 	new->prev = tmp;
 	new->next = NULL;
