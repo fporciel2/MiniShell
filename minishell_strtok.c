@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 10:19:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 06:10:04 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 06:32:09 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -31,6 +31,26 @@
  */
 
 #include "minishell.h"
+
+static int	msh_redirtok(t_input *init)
+{
+	char	redir;
+
+	redir = init->line[init->i];
+	init->errtok = msh_new_token(init);
+	if (init->errtok)
+		return (perror("Error"), 0);
+	if (init->line[init->i + 1] == redir)
+	{
+		init->i++;
+		init->errtok = msh_new_char(init);
+		if (init->errtok)
+			return (perror("Error"), 0);
+		if ((redir == 60) && (init->line[init->i] == 60))
+			return (1);
+	}
+	return (init->heredoc);
+}
 
 static int	msh_quoting(t_input *init)
 {
@@ -66,7 +86,7 @@ int	msh_strtok(t_input *init)
 		if ((init->line[init->i] == 34) || (init->line[init->i] == 39))
 			init->errquote = msh_quoting(init);
 		else if ((init->line[init->i] == 60) || (init->line[init->i] == 62))
-			init->heredoc = msh_redirecting(init);
+			init->heredoc = msh_redirtok(init);
 		else if ((init->line[init->i] <= 32) && (init->line[init->i] > 0))
 			msh_slide_delimiters(init);
 		else if (init->line[init->i] == 124)
