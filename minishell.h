@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 06:32:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 09:56:21 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 12:42:52 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -127,5 +127,7 @@ int		msh_check_redir(t_tok *tok);
 int		msh_new_cmd(t_input *init, t_tok *tok);
 int		msh_new_redir(t_input *init, t_tok *tok);
 int		msh_new_arg(t_input *init, t_tok *tok);
+/* MISC */
+void	msh_print(char *str);
 
 #endif
