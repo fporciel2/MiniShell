@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 10:19:59 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 06:35:49 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 08:19:40 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,6 +32,15 @@
 
 #include "minishell.h"
 
+static int	msh_normalize(t_input *init)
+{
+	if (!init->i || (init->line[init->i - 1] <= 32)
+		|| (init->line[init->i - 1] == 60) || (init->line[init->i - 1] == 62)
+		|| (init->line[init->i - 1] == 124))
+		return (msh_new_token(init));
+	return (msh_new_char(init));
+}
+
 static void	msh_slide_delimiters(t_input *init)
 {
 	if (init->i == 0)
@@ -53,10 +62,12 @@ static int	msh_redirtok(t_input *init)
 		return (perror("Error"), 0);
 	if (init->line[init->i + 1] == redir)
 	{
+		init->redirflag = 1;
 		init->i++;
 		init->errtok = msh_new_char(init);
 		if (init->errtok)
 			return (perror("Error"), 0);
+		init->redirflag = 0;
 		if ((redir == 60) && (init->line[init->i] == 60))
 			return (1);
 	}
@@ -103,7 +114,7 @@ int	msh_strtok(t_input *init)
 		else if (init->line[init->i] == 124)
 			init->pipe = msh_new_token(init);
 		else
-			init->errtok = msh_new_char(init);
+			init->errtok = msh_normalize(init);
 		if (init->errtok || (!init->toks && !init->space))
 			return (perror("Error"), 0);
 		if (init->line[init->i])
