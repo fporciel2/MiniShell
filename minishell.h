@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 06:32:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 09:16:22 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 09:23:34 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -120,11 +120,11 @@ int		msh_new_token(t_input *init);
 int		msh_new_char(t_input *init);
 /* PARSER */
 int		msh_parser(t_input *init);
-int		msh_check_pipe(t_input *init);
-int		msh_check_redir(t_input *init);
+int		msh_check_pipe(t_cmd *cmd);
+int		msh_check_redir(t_cmd *cmd);
 /* COMMAND */
 int		msh_new_cmd(t_input *init);
-int		msh_new_redir(t_input *init);
-int		msh_new_arg(t_input *init);
+int		msh_new_redir(t_input *init, t_cmd *cmd);
+int		msh_new_arg(t_input *init, t_cmd *cmd);
 
 #endif

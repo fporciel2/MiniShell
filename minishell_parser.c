@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 08:30:37 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 09:19:57 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 09:23:04 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,6 +32,10 @@
 
 #include "minishell.h"
 
+int	msh_check_pipe(t_input *init)
+{
+}
+
 int	msh_parser(t_input *init)
 {
 	t_tok	*tmp;
@@ -46,16 +50,16 @@ int	msh_parser(t_input *init)
 		if (!tmp)
 			break ;
 		if (tmp->type == 1)
-			init->errtok = msh_check_pipe(init);
+			init->errtok = msh_check_pipe(tmp);
 		else if (tmp->type == 2)
-			init->errtok = msh_check_redir(init);
+			init->errtok = msh_check_redir(tmp);
 		else if ((tmp->prev && (tmp->prev->type == 1)) || (tmp == init->toks))
-			init->errtok = msh_new_cmd(init);
+			init->errtok = msh_new_cmd(init, tmp);
 		else if ((tmp->prev && (tmp->prev->type == 2))
 				|| (tmp->next && (tmp->next->type == 2)))
-			init->errtok = msh_new_redir(init);
+			init->errtok = msh_new_redir(init, tmp);
 		else
-			init->errtok = msh_new_arg(init);
+			init->errtok = msh_new_arg(init, tmp);
 	}
 	if (init->cmds)
 	{
