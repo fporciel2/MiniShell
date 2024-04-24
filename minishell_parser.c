@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 08:30:37 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/24 09:30:42 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/24 09:37:33 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -40,6 +40,14 @@ int	msh_check_pipe(t_cmd *cmd)
 	return (0);
 }
 
+int	msh_check_redir(t_cmd *cmd)
+{
+	if ((!cmd->prev && !cmd->next) || (cmd->prev->type == 2)
+		|| (cmd->next->type == 2) || (cmd->next->type == 1))
+		return (write(2, "Syntax error: wrong redirection\n", 32), 1);
+	return (0);
+}
+
 int	msh_parser(t_input *init)
 {
 	t_tok	*tmp;
@@ -56,12 +64,9 @@ int	msh_parser(t_input *init)
 		if (tmp->type == 1)
 			init->errtok = msh_check_pipe(tmp);
 		else if (tmp->type == 2)
-			init->errtok = msh_check_redir(tmp);
+			init->errtok = msh_new_redir(init, tmp);
 		else if ((tmp->prev && (tmp->prev->type == 1)) || (tmp == init->toks))
 			init->errtok = msh_new_cmd(init, tmp);
-		else if ((tmp->prev && (tmp->prev->type == 2))
-				|| (tmp->next && (tmp->next->type == 2)))
-			init->errtok = msh_new_redir(init, tmp);
 		else
 			init->errtok = msh_new_arg(init, tmp);
 	}
