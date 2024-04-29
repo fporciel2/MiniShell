@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 16:12:09 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/29 16:20:49 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/29 16:37:03 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -35,7 +35,8 @@
 # define MINISHELL_H
 # define _DEFAULT_SOURCE
 # define _POSIX_C_SOURCE
-# define BAD_START "minishell doesn't take arguments yet"
+# define BAD_START "Minishell doesn't take arguments yet."
+# define SYS_CALL_ERROR "Program crashed: "
 # include <stdio.h>
 # include <readline/readline.h>
 # include <readline/history.h>
@@ -56,7 +57,14 @@
 # include <curses.h>
 # include <term.h>
 
+typedef struct s_msh
+{
+	char	**envp;
+}			t_msh;
+
 /* PRINT ERRORS */
-int	msh_error(char *str1, char *str2, char *str3);
+int		msh_error(char *str1, char *str2, char *str3);
+/* CALCULATE LENGTH */
+ssize_t	msh_strlen(char *str);
 
 #endif

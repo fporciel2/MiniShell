@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_lengths.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/29 16:15:05 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/29 16:36:10 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/29 16:28:15 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/29 16:29:24 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,13 +32,14 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+ssize_t	msh_strlen(char *str)
 {
-	t_msh	msh;
+	ssize_t	i;
 
-	if (argc != 1)
-		return (msh_error(BAD_START, NULL, NULL));
-	msh.envp = msh_matdup(envp);
-	if (!msh.envp)
-		return (msh_error(SYS_CALL_ERROR, strerror(errno), NULL));
+	if (!str)
+		return (0);
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
 }
