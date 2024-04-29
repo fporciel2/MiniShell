@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 16:12:09 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/29 16:37:03 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/29 16:41:17 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -66,5 +66,9 @@ typedef struct s_msh
 int		msh_error(char *str1, char *str2, char *str3);
 /* CALCULATE LENGTH */
 ssize_t	msh_strlen(char *str);
+ssize_t	msh_matlen(char **mat);
+/* DUPLICATE ITEMS */
+char	*msh_strdup(char *str);
+char	**msh_matdup(char **mat);
 
 #endif

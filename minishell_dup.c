@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_lengths.c                                :+:      :+:    :+:   */
+/*   minishell_dup.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/29 16:28:15 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/29 16:38:53 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/29 16:39:50 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/29 16:47:54 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,26 +32,45 @@
 
 #include "minishell.h"
 
-ssize_t	msh_matlen(char **matrix)
+char	*msh_strdup(char *str)
 {
-	ssize_t	i;
-
-	if (!matrix)
-		return (0);
-	i = 0;
-	while (matrix[i])
-		i++;
-	return (i);
-}
-
-ssize_t	msh_strlen(char *str)
-{
+	char	*new;
 	ssize_t	i;
 
 	if (!str)
-		return (0);
+		return (NULL);
+	new = (char *)malloc(sizeof(char) * (msh_strlen(str) + 1));
+	if (!new)
+		return (NULL);
 	i = 0;
 	while (str[i])
+	{
+		new[i] = str[i];
 		i++;
-	return (i);
+	}
+	new[i] = 0;
+	return (new);
+}
+
+char	**msh_matdup(char **mat)
+{
+	ssize_t	i;
+	char	**new;
+
+	if (!mat)
+		return (NULL);
+	new = (char **)malloc(sizeof(char *) * (msh_matlen(mat) + 1));
+	if (!new)
+		return (NULL);
+	i = 0;
+	while (mat[i])
+	{
+		new[i] = msh_strdup(mat[i]);
+		if (!new[i])
+			return (msh_clean_matrix(&new, msh_error(SYS_CALL_ERROR,
+					strerror(errno), NULL)));
+		i++;
+	}
+	new[i] = NULL;
+	return (new);
 }
