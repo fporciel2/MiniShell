@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 16:12:09 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/29 16:54:02 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/29 17:02:29 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -72,6 +72,6 @@ char	*msh_strdup(char *str);
 char	**msh_matdup(char **mat);
 /* CLEAN UP */
 char	*msh_clean_str(char *str);
-int		msh_clean_matrix(char ***mat, int i);
+char	**msh_clean_matrix(char **mat);
 
 #endif
