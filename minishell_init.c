@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_init.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 06:49:29 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 08:03:31 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/22 08:17:21 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/24 18:03:49 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,19 +32,67 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+void	msh_clean_pipeline(t_input *init)
 {
-	t_input	*init;
+	int		i;
+	t_cmd	*tmp;
 
-	if (argc != 1)
-		return ((int)write(2, "Arguments not supported yet.\n", 29));
-	init = (t_input *)malloc(sizeof(t_input));
-	if (!init)
-		return (perror("Error"), errno);
-	init->prompt = argv[0];
-	if (!msh_get_matrix(envp, &init->envp))
-		return (perror("Error"), free(init), errno);
-	if (!msh_set_signals())
-		return (msh_matdel(&init->envp), free(init), errno);
-	return (msh_loop(init));
+	if (init->cmds)
+	{
+		while (init->cmds)
+		{
+			if (init->cmds->name)
+				free(init->cmds->name);
+			if (init->cmds->argv)
+				i = msh_matdel2(&init->cmds->argv);
+			tmp = init->cmds;
+			init->cmds = init->cmds->next;
+			free(tmp);
+			(void)i;
+		}
+	}
+}
+
+void	msh_init(t_input *init)
+{
+	init->cmds = NULL;
+	init->toks = NULL;
+	init->line = NULL;
+	init->i = 0;
+	init->redirflag = 0;
+	init->exit_status = 0;
+	init->errtok = 0;
+	init->space = 0;
+	init->errquote = 1;
+	init->heredoc = 0;
+}
+
+void	msh_memset(t_input *init)
+{
+	t_tok	*tmp;
+	t_tok	*tmp2;
+
+	if (init->line)
+		free(init->line);
+	msh_clean_pipeline(init);
+	if (init->toks)
+	{
+		tmp = init->toks;
+		while (tmp)
+		{
+			if (tmp->str)
+				free(tmp->str);
+			tmp2 = tmp;
+			tmp = tmp->next;
+			free(tmp2);
+		}
+	}
+	msh_init(init);
+}
+
+void	msh_clean_init(t_input **init)
+{
+	msh_memset(*init);
+	(void)msh_matdel(&(*init)->envp);
+	free(*init);
 }

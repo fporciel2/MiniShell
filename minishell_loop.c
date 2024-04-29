@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_loop.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 06:49:29 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 08:03:31 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/22 07:59:49 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/24 04:46:21 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,19 +32,30 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	msh_loop(t_input *init)
 {
-	t_input	*init;
+	int	exit_status;
 
-	if (argc != 1)
-		return ((int)write(2, "Arguments not supported yet.\n", 29));
-	init = (t_input *)malloc(sizeof(t_input));
-	if (!init)
-		return (perror("Error"), errno);
-	init->prompt = argv[0];
-	if (!msh_get_matrix(envp, &init->envp))
-		return (perror("Error"), free(init), errno);
-	if (!msh_set_signals())
-		return (msh_matdel(&init->envp), free(init), errno);
-	return (msh_loop(init));
+	exit_status = 0;
+	init->exit_flag = 0;
+	msh_init(init);
+	while (42)
+	{
+		msh_memset(init);
+		init->line = readline("MiniShell> ");
+		if (!init->line)
+		{
+			exit_status = init->exit_flag;
+			init->i = write(1, "exit\n", 5);
+			msh_clean_init(&init);
+			break ;
+		}
+		else if (*init->line)
+			add_history(init->line);
+		else
+			continue ;
+		if (!msh_strtok(init))
+			continue ;
+	}
+	return (exit_status);
 }

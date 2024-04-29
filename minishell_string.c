@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_string.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/22 06:49:29 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/22 08:03:31 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/22 07:35:55 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/22 07:44:10 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,19 +32,43 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+ssize_t	msh_strlen(char *str)
 {
-	t_input	*init;
+	ssize_t	i;
 
-	if (argc != 1)
-		return ((int)write(2, "Arguments not supported yet.\n", 29));
-	init = (t_input *)malloc(sizeof(t_input));
-	if (!init)
-		return (perror("Error"), errno);
-	init->prompt = argv[0];
-	if (!msh_get_matrix(envp, &init->envp))
-		return (perror("Error"), free(init), errno);
-	if (!msh_set_signals())
-		return (msh_matdel(&init->envp), free(init), errno);
-	return (msh_loop(init));
+	if (!str)
+		return (0);
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
+}
+
+char	*msh_strcpy(char *dest, char *src)
+{
+	ssize_t	i;
+
+	if (!dest || !src)
+		return (NULL);
+	i = 0;
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = 0;
+	return (dest);
+}
+
+char	*msh_strdup(char *str)
+{
+	char	*new;
+
+	if (!str)
+		return (NULL);
+	new = (char *)malloc(sizeof(char) * (msh_strlen(str) + 1));
+	if (!new)
+		return (NULL);
+	new = msh_strcpy(new, str);
+	return (new);
 }
