@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 16:21:09 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/29 16:23:13 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/29 17:09:23 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -34,12 +34,16 @@
 
 int	msh_error(char *str1, char *str2, char *str3)
 {
+	int	i;
+
+	i = 0;
 	if (str1)
-		(void)write(2, str1, msh_strlen(str1));
+		i = (int)write(2, str1, msh_strlen(str1));
 	if (str2)
-		(void)write(2, str2, msh_strlen(str2));
+		i += (int)write(2, str2, msh_strlen(str2));
 	if (str3)
-		(void)write(2, str3, msh_strlen(str3));
-	(void)write(2, "\n", 1);
-	return (0);
+		i += (int)write(2, str3, msh_strlen(str3));
+	i += (int)write(2, "\n", 1);
+	i = 0;
+	return (i);
 }
