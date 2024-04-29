@@ -1,49 +1,107 @@
-NAME 				=	minishell
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: fporciel <marvin@42.fr>                    +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/03/12 11:38:22 by fporciel          #+#    #+#              #
+#    Updated: 2024/04/24 12:31:23 by fporciel         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+# MiniShell is a simple shell for Debian GNU/Linux.
+# Copyright (C) 2024  Federico Porciello
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+# For more information on how to contact me by electronic and paper mail
+# please see:
+# https://github.com/fporciel2/MiniShell
+#
 
-INCLUDES			=	-I includes -I $(LIBFT_DIR)/includes/
+.PHONY: all clean fclean re mem memcheck helgrind thread remem rethread \
+	autogit destroy
+.DEFAULT_GOAL: all
+NAME := minishell
+DIR := $(shell pwd)
+HEADER := $(wildcard $(NAME)*.h)
+MAIN := $(NAME).c
+SRCS := $(filter-out $(MAIN), $(wildcard $(NAME)*.c))
+OBJS := $(patsubst %.c, %.o, $(SRCS))
+LIBMS := $(DIR)/$(addprefix lib, $(NAME)).a
+CC := gcc
+CSTD := -std=c17 -pedantic-errors
+CFLAGS := -Wall -Wextra -Werror
+AFLAGS := $(CFLAGS) -fsanitize=address -fno-omit-frame-pointer -g
+TFLAGS := $(CFLAGS) -fsanitize=thread -g
+COPT := -O3 -march=native -g
+INCLUDE := $(addprefix -I, $(DIR))
+LDINCLUDE := $(addprefix -L, $(DIR))
+LDFLAGS := -lc -lreadline -lncurses -ltinfo -lminishell
+LAFLAGS := $(LDFLAGS) -lasan
+LTFLAGS := $(LDFLAGS) -ltsan
 
-LIBFT				=	$(LIBFT_DIR)libft.a
-LIBFT_DIR			=	libft
-LIB_FLAGS			=	-L $(LIBFT_DIR) -lft
+all: $(NAME)
 
-CC					=	gcc
-CFLAGS				=	-g -Wall -Wextra -Werror
-RM					=	/bin/rm -f
-NORM				=	norminette
+$(NAME): $(MAIN) $(LIBMS)
+	@$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(MAIN) $(LIBMS) \
+		$(LDINCLUDE) $(LDFLAGS) -o $@
 
-DIR_SRCS			=	srcs
-DIR_OBJS			=	objs
-SUBDIRS				=	main parser env utils buildin executer
+$(LIBMS): $(OBJS)
+	@ar rcs $@ $(OBJS) $(HEADER)
 
-SRCS_PATHS			=	$(foreach dir, $(SUBDIRS), $(addprefix $(DIR_SRCS)/, $(dir)))
-OBJS_PATHS			=	$(foreach dir, $(SUBDIRS), $(addprefix $(DIR_OBJS)/, $(dir)))
-SRCS				=	$(foreach dir, $(SRCS_PATHS), $(wildcard $(dir)/*.c))
-OBJS				=	$(subst $(DIR_SRCS), $(DIR_OBJS), $(SRCS:.c=.o))
+$(OBJS): $(SRCS) $(HEADER)
+	@$(CC) $(CSTD) $(CFLAGS) $(COPT) $(INCLUDE) $(HEADER) $(SRCS) -c
 
-$(DIR_OBJS)/%.o :	$(DIR_SRCS)/%.c
-					mkdir -p $(DIR_OBJS) $(OBJS_PATHS)
-					$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+mem: $(MAIN) $(SRCS) $(HEADER) $(LIBFT)
+	@$(CC) $(CSTD) $(CFLAGS) $(AFLAGS) $(INCLUDE) $(HEADER) $(MAIN) $(SRCS) \
+		$(LIBFT) $(filter-out -l$(NAME), $(LAFLAGS)) -o $(NAME)
 
-all:				$(NAME)
-
-$(LIBFT):
-					make -C $(LIBFT_DIR)
-
-$(NAME):			$(OBJS) $(LIBFT)
-					$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIB_FLAGS)
+thread: $(MAIN) $(SRCS) $(HEADER) $(LIBFT)
+	@$(CC) $(CSTD) $(CFLAGS) $(TFLAGS) $(INCLUDE) $(HEADER) $(MAIN) $(SRCS) \
+		$(LIBFT) $(filter-out -l$(NAME), $(LTFLAGS)) -o $(NAME)
 
 clean:
-					make clean -C $(LIBFT_DIR)
-					$(RM) $(OBJS)
-					$(RM) -r $(DIR_OBJS)
+	@rm -f $(OBJS)
+	@rm -f $(LIBMS)
+	@rm -f $(NAME).h.gch
 
-fclean:				clean
-					make fclean -C $(LIBFT_DIR)
-					$(RM) $(NAME)
+fclean: clean
+	@rm -f $(NAME)
 
-re:					fclean all
+re: fclean all
 
-norm:
-					$(NORM) */*.h */*/*.c
+remem: fclean mem
 
-.PHONY:				all clean fclean re norm
+rethread: fclean thread
+
+memcheck: re
+	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes \
+		--verbose ./$(NAME)
+
+helgrind: re
+	@valgrind --tool=helgrind ./$(NAME)
+
+autogit: fclean
+	@git status
+	@echo "\nIs there anything to remove? [y/n]"
+	@read answer; if [ $$answer = "y" ]; \
+		then git rm $$(git ls-files --deleted); fi
+	@git status
+	@git add *
+	@git status
+	@git commit -m "$(shell date)"
+	@git status
+	@git push
+
