@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_loop.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/29 16:15:05 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/30 13:24:55 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/30 13:26:46 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/30 16:13:24 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,20 +32,44 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	msh_destroy(t_msh *msh, int param)
 {
-	static t_msh	msh;
+	if (param)
+		msh->envp = msh_clean_matrix(msh->envp);
+	if (msh->input)
+		msh->input = msh_clean_str(msh->input);
+	return (msh->exit);
+}
 
-	if (argc != 1)
-		return (msh_error(BAD_START, NULL, NULL));
-	(void)argv;
-	msh.envp = msh_matdup(envp);
-	if (!msh.envp)
-		return (msh_error(SYS_CALL_ERROR, strerror(errno), NULL));
-	if (!msh_set_signals())
+int	msh_print_exit(int exit)
+{
+	int	code;
+
+	code = (int)write(1, "exit\n", 5);
+	code = exit;
+	return (code);
+}
+
+int	msh_set_memory(t_msh *msh)
+{
+	msh->exit = msh_destroy(msh, 0);
+	return (msh->exit);
+}
+
+int	msh_loop(t_msh *msh)
+{
+	while (!msh->exit)
 	{
-		msh.envp = msh_clean_matrix(msh.envp);
-		return (msh_error(SYS_CALL_ERROR, strerror(errno), NULL));
+		msh->exit = msh_set_memory(msh);
+		msh->input = readline("minishell> ");
+		if (!msh->input)
+			msh->exit = msh_print_exit(msh->exit);
+		else if (!(*msh->input))
+			continue ;
+		else
+		{
+			add_history(msh->input);
+		}
 	}
-	return (msh_loop(&msh));
+	return (msh_destroy(msh, 1));
 }

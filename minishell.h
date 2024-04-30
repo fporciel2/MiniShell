@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 16:12:09 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/30 13:06:37 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/30 13:49:50 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -60,6 +60,8 @@
 typedef struct s_msh
 {
 	char	**envp;
+	char	*input;
+	int		exit;
 }			t_msh;
 
 /* PRINT ERRORS */
@@ -75,5 +77,11 @@ char	*msh_clean_str(char *str);
 char	**msh_clean_matrix(char **mat);
 /* SIGNAL HANDLER */
 int		msh_set_signals(void);
+void	msh_handle_sigint(int sig);
+/* MAIN LOOP */
+int		msh_loop(t_msh *msh);
+int		msh_set_memory(t_msh *msh);
+int		msh_print_exit(int exit);
+int		msh_destroy(t_msh *msh, int param);
 
 #endif
