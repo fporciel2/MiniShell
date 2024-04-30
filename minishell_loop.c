@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 13:26:46 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/30 16:13:24 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/30 16:15:43 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -45,6 +45,8 @@ int	msh_print_exit(int exit)
 {
 	int	code;
 
+	if (exit == 0)
+		exit = 1;
 	code = (int)write(1, "exit\n", 5);
 	code = exit;
 	return (code);
