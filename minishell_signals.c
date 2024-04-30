@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   minishell_signals.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/29 16:15:05 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/30 13:11:29 by fporciel         ###   ########.fr       */
+/*   Created: 2024/04/30 13:08:36 by fporciel          #+#    #+#             */
+/*   Updated: 2024/04/30 13:09:45 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /* `MiniShell` is a simple shell for Debian GNU/Linux.
@@ -32,20 +32,34 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+void	msh_handle_sigint(int sig)
 {
-	t_msh	msh;
+	ssize_t	i;
 
-	if (argc != 1)
-		return (msh_error(BAD_START, NULL, NULL));
-	(void)argv;
-	msh.envp = msh_matdup(envp);
-	if (!msh.envp)
-		return (msh_error(SYS_CALL_ERROR, strerror(errno), NULL));
-	if (!msh_set_signals())
-	{
-		msh.envp = msh_clean_matrix(msh.envp);
-		return (msh_error(SYS_CALL_ERROR, strerror(errno), NULL));
-	}
-	return (msh_loop(&msh));
+	(void)sig;
+	i = write(STDOUT_FILENO, "\n", 1);
+	(void)i;
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+int	msh_set_signals(void)
+{
+	struct sigaction	sa_int;
+	struct sigaction	sa_quit;
+
+	sa_int.sa_handler = msh_handle_sigint;
+	if (sigemptyset(&sa_int.sa_mask) < 0)
+		return (0);
+	sa_int.sa_flags = 0;
+	if (sigaction(SIGINT, &sa_int, NULL) < 0)
+		return (0);
+	sa_quit.sa_handler = SIG_IGN;
+	if (sigemptyset(&sa_quit.sa_mask) < 0)
+		return (0);
+	sa_quit.sa_flags = 0;
+	if (sigaction(SIGQUIT, &sa_quit, NULL) < 0)
+		return (0);
+	return (1);
 }

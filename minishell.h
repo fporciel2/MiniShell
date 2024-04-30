@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 16:12:09 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/29 17:02:29 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/30 13:06:37 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -73,5 +73,7 @@ char	**msh_matdup(char **mat);
 /* CLEAN UP */
 char	*msh_clean_str(char *str);
 char	**msh_clean_matrix(char **mat);
+/* SIGNAL HANDLER */
+int		msh_set_signals(void);
 
 #endif
