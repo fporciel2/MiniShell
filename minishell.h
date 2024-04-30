@@ -6,7 +6,7 @@
 /*   By: fporciel <fporciel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/29 16:12:09 by fporciel          #+#    #+#             */
-/*   Updated: 2024/04/30 13:49:50 by fporciel         ###   ########.fr       */
+/*   Updated: 2024/04/30 16:31:01 by fporciel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 /*
@@ -60,6 +60,7 @@
 typedef struct s_msh
 {
 	char	**envp;
+	char	**line;
 	char	*input;
 	int		exit;
 }			t_msh;
@@ -83,5 +84,11 @@ int		msh_loop(t_msh *msh);
 int		msh_set_memory(t_msh *msh);
 int		msh_print_exit(int exit);
 int		msh_destroy(t_msh *msh, int param);
+int		msh_input(t_msh *msh);
+/* PARSER */
+int		msh_parser(t_msh *msh);
+int		msh_lexer(t_msh *msh);
+/* EXECUTOR */
+int		msh_executor(t_msh *msh);
 
 #endif
